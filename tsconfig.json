@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "lib": ["dom", "esnext"],
+        "moduleResolution": "node",
+        "outDir": "dist",
+        "sourceMap": true,
+        "types": ["jest", "node"]
+    },
+    "include": ["src/**/*.ts"]
+}
