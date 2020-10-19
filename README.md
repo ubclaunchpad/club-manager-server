@@ -18,4 +18,4 @@ Runs the app in the development mode with a watcher - changes to .ts files will 
 
 ### `yarn lint`
 
-Runs TSLint to ensure that your code is conforming to standards.
+Runs ESLint to ensure that your code is conforming to standards.
