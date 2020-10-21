@@ -1,4 +1,5 @@
 import { Applicant} from '../../types/applicant';
+import {emit} from 'cluster';
 
 const {google} = require('googleapis');
 const keys = require('../../../keys.json')
@@ -36,9 +37,9 @@ export async function getData(url: string, sheetName: string, range: string) {
     return data.data.values;
 }
 
-async function addApplicant(url: string, sheetName: string, range: string, applicant: Applicant) {
-    const cl = await authorize();
-    const gsapi = google.sheets({version: 'v4', auth: cl});
+export async function addApplicant(url: string, sheetName: string, range: string, applicant: Applicant) {
+    authorize();
+    const gsapi = google.sheets({version: 'v4', auth: client});
 
     let id = url.match('/spreadsheets\\/d\\/([a-zA-Z0-9-_]+)')[0];
     id = id.replace('/spreadsheets/d/', '');
@@ -47,11 +48,13 @@ async function addApplicant(url: string, sheetName: string, range: string, appli
         spreadsheetId: id,
         range: `${sheetName}!${range}`,
         valueInputOption: 'USER_ENTERED',
-        insertDataOption: 'INSERT_ROWS',
-        resource: {values: applicant}
+        resource: {values: [
+            [applicant.name, applicant.email, applicant.year, applicant.major, applicant.platforms,
+                applicant.resume, applicant.website]
+        ]}
     };
 
-    let res = await gsapi.spreadsheets.values.update(appendOptions);
+    let res = await gsapi.spreadsheets.values.append(appendOptions);
 
     console.log(res.data);
 }
