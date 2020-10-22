@@ -49,27 +49,6 @@ When it's time to stop the container, you can do the following.
 1. Run `docker ps` and node your container ID
 2. Run `docker stop <container ID>`
 
-## Docker Compose 🐳
+### Docker Compose (🚧 WIP)
 
-This functionality is much more applicable to local development. It will handle setting up a local database (MongoDB) for you to use along with a development container that is running the server.
-
-Docker compose is another application you will need to install for this to work.
-
-### Start Docker Compose
-
-1. Navigate to your terminal
-
-2. Run `docker-compose build`
-
-3. Run `docker-compose up`
-    * At this point you should see via. logs that the server and database will have started up.
-
-4. To exit you can ctrl+c and it should stop the containers. 
-
-### Docker Compose Housekeeping
-
-1. When you ctrl+c out, your containers will be in the "stop" state. At this point, you can run `docker-compose start` to resume where you left off.
-
-2. Any subsequent changes to your package.json file or docker resources will require a fresh build. In this case you will need to run `docker-compose down` to clean up the containers and then rebuild.
-
-3. I highly encourage you to review the docker-compose docs, or even just run `docker-compose` to see what else you can do.
+This functionality is much more applicable to local development. It will handle setting up a local database for you to use along with a development container that is running the server. 
