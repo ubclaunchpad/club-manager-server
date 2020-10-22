@@ -2,13 +2,13 @@
     "name": "club-manager-server",
     "version": "1.0.0",
     "description": "",
-    "type": "module",
     "main": "server.js",
     "scripts": {
         "build": "tsc",
         "lint": "eslint . --ext .ts",
         "start": "ts-node ./src/server.ts",
         "start:watch": "nodemon",
+        "start:docker": "tsc && node ./dist/server.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
