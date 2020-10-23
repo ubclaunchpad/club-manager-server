@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+    server:
+        build:
+            context: .
+            dockerfile: dev.Dockerfile
+        container_name: server
+        depends_on: [
+            mongodb
+        ]
+        command: npm run start:watch
+        ports: [ 
+            "4000:4000" 
+        ]
+        volumes: [ 
+            ./:/usr/app 
+        ]
+    mongodb:
+        image: mongo:4.4.1-bionic
+        container_name: mongodb
+        environment:
+            MONGODB_INITDB_ROOT_USERNAME: dev
+            MONGODB_INIT_ROOT_PASSWORD: dev_password
+            MONGODB_INIT_ROOT_DATABASE: db
+            MONGODB_DATA_DIR: /data/db
+            MONGODB_LOG_DIR: /dev/null
+        ports: [
+            27017:27017
+        ]
+        volumes: [
+            ./db_m:/data/db
+        ]
