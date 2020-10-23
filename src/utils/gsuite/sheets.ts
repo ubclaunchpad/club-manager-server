@@ -1,5 +1,4 @@
 import { Applicant} from '../../types/applicant';
-import {emit} from 'cluster';
 
 const {google} = require('googleapis');
 const keys = require('../../../keys.json')
