@@ -41,6 +41,9 @@ build/Release
 node_modules/
 jspm_packages/
 
+# Lets restrict to one lock file (Yarn)
+package-lock.json
+
 # TypeScript v1 declaration files
 typings/
 
@@ -96,6 +99,9 @@ dist
 
 # FuseBox cache
 .fusebox/
+
+# Docker-generated MongoDB local files 
+db_m
 
 # DynamoDB Local files
 .dynamodb/
