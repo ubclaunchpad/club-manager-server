@@ -34,13 +34,11 @@ async function setApplicants(sheetUrl: string, sheetName: string, range: string)
 
 // url of sample data sheet with applicants
 let dataSheetUrl = 'https://docs.google.com/spreadsheets/d/1JgrBy8aWRdGOsFKgXtylsEHFJdKfTWD0tE_cansjpU4/edit#gid=0';
-let applicants: Array<Applicant> = [];
+
 // creating list of applicants
-setApplicants(dataSheetUrl, 'Sheet1', 'A2:G12').then(((data) => {
-    applicants = data;
+setApplicants(dataSheetUrl, 'Sheet1', 'A2:G12').then(((applicants) => {
+    console.log(applicants);
 }))
-// printing out applicants to console
-applicants.forEach((applicant) => console.log(applicant));
 
 // creates new test applicant
 let newApplicant = createApplicant("Test Person7", "test@test.com", 5, "cs", "iOS",
