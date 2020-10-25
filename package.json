@@ -22,8 +22,11 @@
     },
     "homepage": "https://github.com/ubclaunchpad/club-manager-server#readme",
     "dependencies": {
+        "@types/mongoose": "^5.7.36",
         "async": "^3.2.0",
-        "express": "^4.17.1"
+        "express": "^4.17.1",
+        "mongoose": "^5.10.10",
+        "mongoose-type-url": "^2.1.0"
     },
     "devDependencies": {
         "@types/express": "^4.17.8",
