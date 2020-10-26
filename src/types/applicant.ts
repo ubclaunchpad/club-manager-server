@@ -10,9 +10,10 @@ export interface Applicant {
     resume: string;
     website?: string;
     linkedin?: string;
+    [propName: string]: any; // Future-proofing for cases where applicant can have other properties
 }
 
-// creates an instance of an applicant with the given parameters
+// Instantiate applicant interface constructors
 function createApplicant(
     firstName: string,
     lastName: string,
@@ -30,11 +31,13 @@ function createApplicant(
 
 // creates a list of applicants by parsing google sheets with given url, sheet name, and data range
 // range has form 'A1:G12'
-async function setApplicants(sheetUrl: string, sheetName: string, range: string) {
+async function setApplicants(sheetUrl: string, sheetName: string, range: string): Promise<Array<Applicant>> {
     const applicants: Array<Applicant> = [];
     const data = await getData(sheetUrl, sheetName, range);
 
+    // loops over each row in given range
     data.map((row) => {
+        // creates applicant using data from the specified columns of the sheet
         const applicant = createApplicant(row[0], row[1], row[4], row[5], row[3], row[2], row[6], row[7], row[8]);
         applicants.push(applicant);
     });
@@ -43,10 +46,9 @@ async function setApplicants(sheetUrl: string, sheetName: string, range: string)
 }
 
 // url of sample data sheet with applicants
-// let dataSheetUrl = 'https://docs.google.com/spreadsheets/d/1JgrBy8aWRdGOsFKgXtylsEHFJdKfTWD0tE_cansjpU4/edit#gid=0';
 const dataSheetUrl = 'https://docs.google.com/spreadsheets/d/1knAAeS1sn6GsT5V12nrZo-2Ma9dyPGVoOGphhSBq0zo/edit#gid=0';
 
-// creating list of applicants
+// creating list of applicants and printing them to console
 setApplicants(dataSheetUrl, 'Sheet1', 'A2:I15').then((applicants) => {
     console.log(applicants);
 });
