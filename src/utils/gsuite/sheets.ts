@@ -24,7 +24,7 @@ function authorize() {
 }
 
 // note: if the sheets is not open to access by url, then need to make the service account email an editor
-export async function getData(url: string, sheetName: string, range: string): Promise<IterableIterator<number>> {
+export async function getData(url: string, sheetName: string, range: string) {
     authorize();
     const gsapi = google.sheets({ version: 'v4', auth: client });
 
