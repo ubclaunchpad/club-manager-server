@@ -1,4 +1,5 @@
-import {Schema, SchemaType, SchemaTypes} from "mongoose";
+import * as mongoose from 'mongoose';
+import {Schema} from 'mongoose';
 
 const applicantSchema = new Schema(
     {
@@ -14,7 +15,7 @@ const applicantSchema = new Schema(
         },
         role: {
             type: Number,
-            enum: [0, 1],
+            enum: ['Developer', 'Designer'],
             default: 0,
             required: true,
         },
@@ -40,11 +41,6 @@ const applicantSchema = new Schema(
         }
     }
 );
-
-enum Role {
-    Developer = 0,
-    Designer = 1,
-}
 
 const Applicant = mongoose.model('Applicant', applicantSchema);
 

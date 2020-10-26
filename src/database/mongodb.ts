@@ -1,7 +1,6 @@
-const mongoose = require('mongoose');
+import * as mongoose from 'mongoose';
 
-const ENDPOINT = process.env.ENDPOINT_DB;
-const DESC = process.env.DESC_DB;
+const ENDPOINT = process.env.ENDPOINT_DB || 'localhost:27018';
 
 mongoose.connect(ENDPOINT, {
     useCreateIndex: true,
@@ -11,5 +10,5 @@ mongoose.connect(ENDPOINT, {
 });
 
 mongoose.connection.once('open', () => {
-    console.log(`Connected to database at ${DESC}`);
+    console.log(`Connected to database at ${ENDPOINT}`);
 });
