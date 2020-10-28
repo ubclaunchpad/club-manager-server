@@ -15,6 +15,7 @@
         "type": "git",
         "url": "git+https://github.com/ubclaunchpad/club-manager-server.git"
     },
+    "eslint": "^5.8.0",
     "author": "",
     "license": "MIT",
     "bugs": {
