@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 
-const ENDPOINT = process.env.ENDPOINT_DB || 'localhost:27018';
+const ENDPOINT = process.env.ENDPOINT_DB || 'localhost:27017';
 
 mongoose.connect(ENDPOINT, {
     useCreateIndex: true,
