@@ -111,5 +111,5 @@ db_m
 # TernJS port file
 .tern-port
 
-# Others
+# Credentials
 credentials.json

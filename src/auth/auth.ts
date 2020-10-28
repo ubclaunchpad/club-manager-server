@@ -1,19 +1,24 @@
 import * as fs from 'fs';
 import * as readLine  from 'readline';
-import {google} from 'googleapis';
+import {google, oauth2_v1} from 'googleapis';
+import { Request, Response } from 'express';
 
-// If modifying these scopes, delete token.json.
+/**
+ * If modifying these scopes, delete token.json.
+ */
 const SCOPES = ['https://www.googleapis.com/auth/gmail.send'];
-// The file token.json stores the user's access and refresh tokens, and is
-// created automatically when the authorization flow completes for the first
-// time.
+
+/** The file token.json stores the user's access and refresh tokens, and is
+ * created automatically when the authorization flow completes for the first
+ * time.
+ */
 const TOKEN_PATH = 'token.json';
 
 /**
  * Ensure user is authenticated with the given credentials and store the OAuth2 client
  * to res.locals.auth and go to the next middleware function in the route
  */
-export const ensureAuthenticated = () => async(req, res, next) => {
+export const ensureAuthenticated = () => async function (req: Request, res: Response, next: any): Promise<any> {
   // Load client secrets from a local file.
   try {
     fs.readFile('credentials.json', (err, content) => {
@@ -31,9 +36,8 @@ export const ensureAuthenticated = () => async(req, res, next) => {
 /**
  * Create an OAuth2 client with the given credentials
  * @param {Object} credentials The authorization client credentials.
- * @param {function} callback The callback to call with the authorized client.
  */
-function authorize(credentials) {
+const authorize = (credentials): any => {
   const {client_secret, client_id, redirect_uris} = credentials.installed;
   const oAuth2Client = new google.auth.OAuth2(
       client_id, client_secret, redirect_uris[0]);
@@ -49,9 +53,8 @@ function authorize(credentials) {
 /**
  * Get and store new token after prompting for user authorization
  * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
- * @param {getEventsCallback} callback The callback for the authorized client.
  */
-function getNewToken(oAuth2Client) {
+const getNewToken = (oAuth2Client): void => {
   const authUrl = oAuth2Client.generateAuthUrl({
     access_type: 'offline',
     scope: SCOPES,

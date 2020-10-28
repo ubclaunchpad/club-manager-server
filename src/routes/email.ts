@@ -1,5 +1,5 @@
 import { Router } from "express";
-import SendingUtils from '../utils/mail/SendingUtils'
+import SendingUtils from '../utils/mail/sending-utils'
 
 export const emailRouter = Router();
 
