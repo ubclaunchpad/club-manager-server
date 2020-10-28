@@ -8,4 +8,8 @@
         "typescript",
         "typescriptreact",
     ],
+    "eslint.workingDirectories": [
+        "./backend", 
+        "./frontend"
+    ],
 }
