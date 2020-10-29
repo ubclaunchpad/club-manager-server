@@ -1,9 +1,13 @@
 import { google } from 'googleapis'
 
 
-/* TODO: Creat an email message and encode it to Base64 */
+/**
+ * TODO: Creat an email message and encode it to Base64 
+ */
 export const createEmailMessage = (requestBody: string): string => {
-    // a test encoded email
+    // A hardcode test email message
+    // Note: Please use a Base64 text encoder/decoder to customize your email message
+    // and remember to change the recipient for testing purpose 
     return 'RnJvbTogPEZST01AZ21haWwuY29tPgpUbzogPG5hbmN5d2FuMTAwNEBnbWFpbC5jb20+ClN1YmplY3Q6IFRlc3QgRW1haWwKClRlc3Q=';
 }
 
