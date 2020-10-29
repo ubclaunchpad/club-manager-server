@@ -1,5 +1,5 @@
 import { Router } from "express";
-import SendingUtils from '../utils/mail/sending-utils'
+import {sendEmail} from '../utils/mail/sending-utils'
 
 export const emailRouter = Router();
 
@@ -10,7 +10,7 @@ emailRouter.route('/email').post(async (req, res) => {
     try {
         const authClient = res.locals.auth;
         const reqBody = req.body;
-        const resp = await SendingUtils.sendEmail(authClient, reqBody);
+        const resp = await sendEmail(authClient, reqBody);
         if (resp.status === 200) {
             // TODO: Additional response handling
             res.send({ status: 'successful' });

@@ -1,79 +1,100 @@
+import * as dotenv from "dotenv";
 import * as fs from 'fs';
-import * as readLine  from 'readline';
-import {google, oauth2_v1} from 'googleapis';
-import { Request, Response } from 'express';
+import * as path from 'path';
+import * as http from 'http';
+import * as url from 'url';
+import * as opn from 'open';
+import {
+    createHttpTerminator,
+  } from 'http-terminator';
+
+import {google} from 'googleapis';
+
+dotenv.config();
 
 /**
- * If modifying these scopes, delete token.json.
+ * To use OAuth2 authentication, we need access to a a CLIENT_ID, CLIENT_SECRET, AND REDIRECT_URI.  To get these credentials for your application, visit https://console.cloud.google.com/apis/credentials.
  */
-const SCOPES = ['https://www.googleapis.com/auth/gmail.send'];
-
-/** The file token.json stores the user's access and refresh tokens, and is
- * created automatically when the authorization flow completes for the first
- * time.
- */
-const TOKEN_PATH = 'token.json';
+let keys;
+const keyPath = path.join(__dirname, 'client_secret.json');
+if (fs.existsSync(keyPath)) {
+  keys = require(keyPath).web;
+}
 
 /**
- * Ensure user is authenticated with the given credentials and store the OAuth2 client
- * to res.locals.auth and go to the next middleware function in the route
+ * Create a new OAuth2 client with the configured keys.
  */
-export const ensureAuthenticated = () => async function (req: Request, res: Response, next: any): Promise<any> {
-  // Load client secrets from a local file.
-  try {
-    fs.readFile('credentials.json', (err, content) => {
-      if (err) return console.log('Error loading client secret file:', err);
-      // Authorize a client with credentials, then call the Gmail API.
-      res.locals.auth = authorize(JSON.parse(content.toString()));
-      return next();
+const oauth2Client = new google.auth.OAuth2(
+  keys.client_id,
+  keys.client_secret,
+  keys.redirect_uris[0]
+);
+
+/**
+ * This is one of the many ways you can configure googleapis to use authentication credentials.  In this method, we're setting a global reference for all APIs.  Any other API you use here, like google.drive('v3'), will now use this auth client. You can also override the auth client at the service and method call levels.
+ */
+
+/**
+ * Open an http server to accept the oauth callback. In this simple example, the only request to our webserver is to /callback?code=<code>
+ */
+async function authenticate(scopes) {
+  return new Promise((resolve, reject) => {
+    // grab the url that will be used for authorization
+    const authorizeUrl = oauth2Client.generateAuthUrl({
+      access_type: 'offline',
+      scope: scopes.join(' '),
     });
-  } catch (e) {
-    console.log("Error retrieving credentials: " + e);
-  }
 
-}
-
-/**
- * Create an OAuth2 client with the given credentials
- * @param {Object} credentials The authorization client credentials.
- */
-const authorize = (credentials): any => {
-  const {client_secret, client_id, redirect_uris} = credentials.installed;
-  const oAuth2Client = new google.auth.OAuth2(
-      client_id, client_secret, redirect_uris[0]);
-
-  // Check if we have previously stored a token.
-  fs.readFile(TOKEN_PATH, (err, token) => {
-    if (err) return getNewToken(oAuth2Client);
-    oAuth2Client.setCredentials(JSON.parse(token.toString()));
-    return oAuth2Client;
-  });
-}
-
-/**
- * Get and store new token after prompting for user authorization
- * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
- */
-const getNewToken = (oAuth2Client): void => {
-  const authUrl = oAuth2Client.generateAuthUrl({
-    access_type: 'offline',
-    scope: SCOPES,
-  });
-  console.log('Authorize this app by visiting this url:', authUrl);
-  const rl = readLine.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-  rl.question('Enter the code from that page here: ', (code) => {
-    rl.close();
-    oAuth2Client.getToken(code, (err, token) => {
-      if (err) return console.error('Error retrieving access token', err);
-      oAuth2Client.setCredentials(token);
-      // Store the token to disk for later program executions
-      fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
-        if (err) return console.error(err);
-        console.log('Token stored to', TOKEN_PATH);
+    const server = http.createServer(async (req, res) => {
+        try {
+          if (req.url.indexOf('code') > -1) {
+            const qs = new url.URL(req.url, 'http://localhost:3000')
+              .searchParams;
+            res.end('Authentication successful! Please return to the console.');
+            await httpTerminator.terminate();
+            const {tokens} = await oauth2Client.getToken(qs.get('code'));
+            oauth2Client.credentials = tokens; // eslint-disable-line require-atomic-updates
+            resolve(oauth2Client);
+          }
+        } catch (e) {
+          reject(e);
+        }
+      })
+      server.listen(3000, () => {
+        // open the browser to the authorize url to start the workflow
+        opn(authorizeUrl, {wait: false}).then(cp => cp.unref()).catch((e)=>reject(e));
       });
-    });
+      const httpTerminator = createHttpTerminator({
+        server,
+      });
+    // destroyer(server);
   });
+}
+
+/**
+ * 
+ * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
+ */
+async function runSample(auth) {
+    const gmail = google.gmail({version: 'v1', auth});
+    const res = await gmail.users.messages.send({
+      userId: 'me',
+      requestBody: {
+        // Replace with `projects/${PROJECT_ID}/topics/${TOPIC_NAME}`
+        raw: 'RnJvbTogPEZST01AZ21haWwuY29tPgpUbzogPG5hbmN5d2FuMTAwNEBnbWFpbC5jb20+ClN1YmplY3Q6IFRlc3QgRW1haWwKClRlc3Q='
+      }
+    });
+    console.log(res.data);
+    return res;
+}
+
+const scopes = ['https://www.googleapis.com/auth/gmail.send'];
+
+export const ensureAuthenticated = () => async function (req, res, next: any): Promise<any> {
+    // Load client secrets from a local file.
+    const authClient = await authenticate(scopes);
+    // const response = await runSample(authClient)
+    // console.log(response)
+    res.locals.auth = authClient;
+    return next();
 }
