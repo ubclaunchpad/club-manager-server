@@ -14,7 +14,7 @@ const client = new google.auth.JWT(keys.client_email, null, keys.private_key, [
     'https://www.googleapis.com/auth/spreadsheets',
 ]);
 // authorizes the client
-function authorize() {
+const authorize = () => {
     client.authorize(function (err) {
         if (err) {
             console.log(err);
@@ -22,7 +22,7 @@ function authorize() {
             console.log('Connected');
         }
     });
-}
+};
 
 // note: if the sheets is not open to access by url, then need to make the service account email an editor
 export async function getData(url: string, sheetName: string, range: string): Promise<any[][]> {
