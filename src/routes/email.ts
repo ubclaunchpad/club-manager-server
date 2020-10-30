@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { sendEmail } from '../utils/mail/sending-utils'
+import { sendEmail } from '../utils/mail/sending-utils';
 
 export const emailRouter = Router();
 
@@ -18,4 +18,4 @@ emailRouter.route('/email').post(async (req, res) => {
     } catch (e) {
         res.status(404).send(e.message);
     }
-})
+});
