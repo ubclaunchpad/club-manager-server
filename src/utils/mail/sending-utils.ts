@@ -1,11 +1,11 @@
-import { google } from 'googleapis';
+import { google, gmail_v1 } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
+import { GaxiosResponse } from 'gaxios';
 
 /**
  * TODO: Creat an email message and encode it to Base64
  */
-export const createEmailMessage = (requestBody: string): string => {
-    // eslint-disable-line
+export const createEmailMessage = (requestBody: string): string => { // eslint-disable-line
     // A hardcode test email message
     // Note: Please use a Base64 text encoder/decoder to customize your email message
     // and remember to change the recipient for testing purpose
@@ -16,7 +16,10 @@ export const createEmailMessage = (requestBody: string): string => {
  *  @param {google.auth.OAuth2} auth An authorized OAuth2 client.
  *  @param {string} email message sent in request body
  */
-export const sendEmail = async (auth: OAuth2Client, reqBody: string): Promise<any> => {
+export const sendEmail = async (
+    auth: OAuth2Client,
+    reqBody: string,
+): Promise<GaxiosResponse<gmail_v1.Schema$Message>> => {
     // eslint-disable-line
     const gmail = google.gmail({ version: 'v1', auth });
     const res = await gmail.users.messages.send({

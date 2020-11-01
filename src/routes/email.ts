@@ -4,7 +4,7 @@ import { sendEmail } from '../utils/mail/sending-utils';
 export const emailRouter = Router();
 
 /**
- * Post request to send an email from an authorized Gmail account
+ * A POST request to send an email from an authorized Gmail account
  */
 emailRouter.route('/email').post(async (req, res) => {
     try {
