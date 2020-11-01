@@ -15,7 +15,6 @@ authRouter.post('/auth', async (req, res) => {
         const keyPath = path.join(__dirname, '..', 'credentials', 'client_secret.json');
         const authClient = parseCredentialKeys(keyPath);
         const auth = await authenticate(scopes.split(','), authClient);
-        // store the auth so that successive middleware functions can access the same auth variable
         res.send(auth);
     } catch (e) {
         res.status(404).send(e.message);

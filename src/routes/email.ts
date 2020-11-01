@@ -6,7 +6,7 @@ export const emailRouter = Router();
 /**
  * A POST request to send an email from an authorized Gmail account
  */
-emailRouter.route('/email').post(async (req, res) => {
+emailRouter.post('/email', async (req, res) => {
     try {
         const authClient = res.locals.auth;
         const reqBody = req.body;
