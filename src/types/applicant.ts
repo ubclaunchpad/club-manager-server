@@ -1,5 +1,3 @@
-import { getData } from '../utils/gsuite/sheets';
-
 /** @description Represents an applicant with the listed fields */
 export interface Applicant {
     firstName: string;
@@ -35,19 +33,17 @@ function createApplicant(
 
 /**
  * @description Creates a list of applicants by parsing the Google sheet with given URL and sheet name
- * @param {string} sheetUrl - The URL of the Google sheet.
- * @param {string} sheetName - The name of the Google sheet.
+ * @param {any[][]} sheetsData - The parsed data from a Google sheet.
  */
-async function setApplicants(sheetUrl: string, sheetName: string): Promise<Array<Applicant>> {
+export function setApplicants(sheetsData: any[][]): Array<Applicant> {
     const applicants: Array<Applicant> = [];
-    const data = await getData(sheetUrl, sheetName);
     const headers: Map<string, number> = new Map();
 
-    parseColumnHeaders(data[0], headers);
+    parseColumnHeaders(sheetsData[0], headers);
 
     // loops over each row
-    for (let _i = 1; _i < data.length; _i++) {
-        const row = data[_i];
+    for (let _i = 1; _i < sheetsData.length; _i++) {
+        const row = sheetsData[_i];
 
         // creates applicant using data from the specified columns of the sheet
         const applicant = createApplicant(
@@ -77,16 +73,3 @@ const parseColumnHeaders = (columns: string[], headers: Map<string, number>) => 
         headers.set(columns[_i].trim().toLowerCase(), _i);
     }
 };
-
-/**
- * The code below is for demo with a test sheet
- * Can test by running command: ts-node ./src/types/applicant
- */
-
-/** URL of sample data sheet with applicants */
-const dataSheetUrl = 'https://docs.google.com/spreadsheets/d/1knAAeS1sn6GsT5V12nrZo-2Ma9dyPGVoOGphhSBq0zo/edit#gid=0';
-
-/** creating list of applicants and printing them to console */
-setApplicants(dataSheetUrl, 'Sheet1').then((applicants) => {
-    console.log(applicants);
-});
