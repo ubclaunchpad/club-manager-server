@@ -5,7 +5,9 @@
         "moduleResolution": "node",
         "outDir": "dist",
         "sourceMap": true,
-        "types": ["jest", "node"]
+        "types": ["jest", "node"],
+        "resolveJsonModule": true,
+        "esModuleInterop": true            
     },
     "include": ["src/**/*.ts"]
 }
