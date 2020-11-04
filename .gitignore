@@ -110,3 +110,6 @@ db_m
 
 # TernJS port file
 .tern-port
+
+# Credentials
+credentials.json
