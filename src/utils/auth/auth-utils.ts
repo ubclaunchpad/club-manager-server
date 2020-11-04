@@ -12,9 +12,8 @@ import { createHttpTerminator } from 'http-terminator';
 dotenv.config();
 
 /**
- *
- * @param keyPath path of the credential file
- * Parse the credential keys and return a new oauth2Client with the keys' configurations
+ * @description Parse the credential keys and return a new oauth2Client with the keys' configurations
+ * @param {string} keyPath - path of the credential file
  */
 export const parseCredentialKeys = (keyPath: string): OAuth2Client => {
     try {
@@ -29,7 +28,9 @@ export const parseCredentialKeys = (keyPath: string): OAuth2Client => {
 };
 
 /**
- * Open an http server to accept the oauth callback. In this simple example, the only request to our webserver is to /callback?code=<code>
+ * @description Open an http server to accept the oauth callback. In this simple example, the only request to our webserver is to /callback?code=<code>
+ * @param {string[]} scopes - a list of API scopes the user has access to
+ * @param {OAuth2Client} authClient - an authenticated Google OAuth2Client parsed from the credential file
  */
 export const authenticate = async (scopes: string[], authClient: OAuth2Client): Promise<OAuth2Client> => {
     return new Promise((resolve, reject) => {
@@ -66,7 +67,7 @@ export const authenticate = async (scopes: string[], authClient: OAuth2Client): 
 };
 
 /**
- * Ensure the user is authenticated to make the Gmail API call
+ * @description Middleware function to ensure the user is authenticated to make the Gmail API call
  */
 export const ensureAuthenticated = () =>
     async function (req: Request, res: Response, next: () => Promise<() => void>): Promise<() => void> {

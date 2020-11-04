@@ -1,13 +1,13 @@
 import * as path from 'path';
-import { Router } from 'express';
+import { Request, Response, Router } from 'express';
 import { authenticate, parseCredentialKeys } from '../utils/auth/auth-utils';
 
 export const authRouter = Router();
 
 /**
- * A POST request to retrieve the access token from the OAuth2Client
+ * @description POST request to retrieve the access token from the OAuth2Client
  */
-authRouter.post('/', async (req, res) => {
+authRouter.post('/', async (req: Request, res: Response) => {
     try {
         // A list of API scopes that a verified user is able to access
         const scopes = req.body.scopes;

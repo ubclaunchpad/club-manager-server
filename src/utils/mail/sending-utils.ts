@@ -3,27 +3,28 @@ import { OAuth2Client } from 'google-auth-library';
 import { GaxiosResponse } from 'gaxios';
 
 /**
- * Encode an email message to Base64
+ * @description Encode an email message to Base64
+ * @param { string } rawMsg - raw email message sent in request body
  */
-export const encodeEmail = (requestBody: string): string => {
-    const encodedMsg = Buffer.from(requestBody).toString('base64');
+export const encodeEmail = (rawMsg: string): string => {
+    const encodedMsg = Buffer.from(rawMsg).toString('base64');
     return encodedMsg;
 };
 
-/** Send an email through an authorized Gmail account
- *  @param {google.auth.OAuth2} auth An authorized OAuth2 client.
- *  @param {string} email message sent in request body
+/** @description Send an email through an authorized Gmail account
+ *  @param {google.auth.OAuth2} auth - auth An authorized OAuth2 client.
+ *  @param {string} rawMsg - raw email message sent in request body
  */
 export const sendEmail = async (
     auth: OAuth2Client,
-    reqBody: string,
+    rawMsg: string,
 ): Promise<GaxiosResponse<gmail_v1.Schema$Message>> => {
     // eslint-disable-line
     const gmail = google.gmail({ version: 'v1', auth });
     const res = await gmail.users.messages.send({
         userId: 'me',
         requestBody: {
-            raw: encodeEmail(reqBody),
+            raw: encodeEmail(rawMsg),
         },
     });
     console.log(res.data);
