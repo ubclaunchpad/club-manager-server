@@ -11,8 +11,8 @@ const server = express();
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
 
-server.use('/', authRouter);
-server.use('/', ensureAuthenticated(), emailRouter);
+server.use('/api/auth', authRouter);
+server.use('/api/email', ensureAuthenticated(), emailRouter);
 
 server.get('/', async (req, res) => {
     res.send('Hello World!');

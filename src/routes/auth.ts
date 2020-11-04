@@ -7,10 +7,10 @@ export const authRouter = Router();
 /**
  * A POST request to retrieve the access token from the OAuth2Client
  */
-authRouter.post('/auth', async (req, res) => {
+authRouter.post('/', async (req, res) => {
     try {
         // A list of API scopes that a verified user is able to access
-        const scopes = req.body.scopes || [];
+        const scopes = req.body.scopes;
         // set the credential file path
         const keyPath = path.join(__dirname, '..', 'credentials', 'client_secret.json');
         const authClient = parseCredentialKeys(keyPath);

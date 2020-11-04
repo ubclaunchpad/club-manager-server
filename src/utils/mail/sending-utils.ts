@@ -3,13 +3,11 @@ import { OAuth2Client } from 'google-auth-library';
 import { GaxiosResponse } from 'gaxios';
 
 /**
- * TODO: Creat an email message and encode it to Base64
+ * Encode an email message to Base64
  */
-export const createEmailMessage = (requestBody: string): string => { // eslint-disable-line
-    // A hardcode test email message
-    // Note: Please use a Base64 text encoder/decoder to customize your email message
-    // and remember to change the recipient for testing purpose
-    return 'RnJvbTogPEZST01AZ21haWwuY29tPgpUbzogPG5hbmN5d2FuMTAwNEBnbWFpbC5jb20+ClN1YmplY3Q6IFRlc3QgRW1haWwKClRlc3Q=';
+export const encodeEmail = (requestBody: string): string => {
+    const encodedMsg = Buffer.from(requestBody).toString('base64');
+    return encodedMsg;
 };
 
 /** Send an email through an authorized Gmail account
@@ -25,7 +23,7 @@ export const sendEmail = async (
     const res = await gmail.users.messages.send({
         userId: 'me',
         requestBody: {
-            raw: createEmailMessage(reqBody),
+            raw: encodeEmail(reqBody),
         },
     });
     console.log(res.data);
