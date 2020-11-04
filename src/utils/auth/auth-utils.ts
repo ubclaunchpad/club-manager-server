@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as http from 'http';
 import * as path from 'path';
 import * as url from 'url';
-import * as opn from 'open';
+import opn from 'open';
 import { Request, Response } from 'express';
 import { google } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
