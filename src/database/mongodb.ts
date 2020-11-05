@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 
-const ENDPOINT = process.env.ENDPOINT_DB || 'localhost:27017';
+const ENDPOINT = process.env.ENDPOINT_DB || 'mongodb://127.0.0.1:27017/clubmanager';
 
 mongoose.connect(ENDPOINT, {
     useCreateIndex: true,

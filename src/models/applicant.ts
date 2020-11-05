@@ -1,5 +1,17 @@
 import * as mongoose from 'mongoose';
-import { Schema } from 'mongoose';
+import { Document, Model, Schema } from 'mongoose';
+
+export interface IApplicant extends Document {
+    firstName: string;
+    lastName: string;
+    role: string;
+    major: string;
+    yearStanding: string;
+    status: string;
+    linkedIn: string;
+    website: string;
+    resume: string;
+}
 
 const applicantSchema = new Schema({
     firstName: {
@@ -13,9 +25,9 @@ const applicantSchema = new Schema({
         required: true,
     },
     role: {
-        type: Number,
+        type: String,
         enum: ['Developer', 'Designer'],
-        default: 0,
+        default: 'Developer',
         required: true,
     },
     major: {
@@ -24,6 +36,12 @@ const applicantSchema = new Schema({
     },
     yearStanding: {
         type: Number,
+        required: true,
+    },
+    status: {
+        type: String,
+        enum: ['Pending', 'Accepted', 'Rejected', 'Scheduled'],
+        default: 'Pending',
         required: true,
     },
     linkedIn: {
@@ -40,6 +58,6 @@ const applicantSchema = new Schema({
     },
 });
 
-const Applicant = mongoose.model('Applicant', applicantSchema);
+const Applicant: Model<IApplicant> = mongoose.model('Applicant', applicantSchema);
 
-module.exports = Applicant;
+export default Applicant;
