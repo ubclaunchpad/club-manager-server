@@ -1,4 +1,4 @@
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
 
 const ENDPOINT = process.env.ENDPOINT_DB || 'mongodb://127.0.0.1:27017/clubmanager';
 
