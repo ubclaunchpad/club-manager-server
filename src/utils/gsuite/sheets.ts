@@ -9,7 +9,7 @@ const authorize = (client) => {
         if (err) {
             console.log(err);
         } else {
-            console.log('Connected');
+            console.log('Connected to Sheets API');
         }
     });
     return client;
@@ -39,7 +39,7 @@ export async function getSheetData(
     sheetName: string,
     clientEmail: string,
     clientKey: string,
-): Promise<Array<Applicant>> {
+): Promise<Map<string, Applicant>> {
     const sheetsClient = client(clientEmail, clientKey);
     const gsapi = google.sheets({ version: 'v4', auth: sheetsClient });
 
@@ -52,7 +52,7 @@ export async function getSheetData(
 
     const data = await gsapi.spreadsheets.values.get(opt);
 
-    return setApplicants(data.data.values);
+    return setApplicants(data.data.values, id);
 }
 
 /**
