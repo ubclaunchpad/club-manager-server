@@ -14,15 +14,10 @@ export const postSheet = async (req, res) => {
             key: req.body.key,
         };
 
-        const applicants: Map<string, Applicant> = await getSheetData(
-            sheet.url,
-            sheet.sheetName,
-            sheet.email,
-            sheet.key,
-        );
+        const applicants: Array<Applicant> = await getSheetData(sheet.url, sheet.sheetName, sheet.email, sheet.key);
 
-        res.status(200).send(Array.from(applicants.values()));
+        res.status(200).send(applicants);
     } catch (e) {
-        res.status(404).send(e.message);
+        res.status(500).send(e.message);
     }
 };

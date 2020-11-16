@@ -39,7 +39,7 @@ export async function getSheetData(
     sheetName: string,
     clientEmail: string,
     clientKey: string,
-): Promise<Map<string, Applicant>> {
+): Promise<Array<Applicant>> {
     const sheetsClient = client(clientEmail, clientKey);
     const gsapi = google.sheets({ version: 'v4', auth: sheetsClient });
 

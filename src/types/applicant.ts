@@ -36,10 +36,10 @@ function createApplicant(
 /**
  * @description Creates a list of applicants by parsing the Google sheet with given URL and sheet name
  * @param {any[][]} sheetsData - The parsed data from a Google sheet.
- * @param {string} sheetURL - The ID of the Google sheet
+ * @param {string} sheetID - The sheet id from which the users are being imported
  */
-export function setApplicants(sheetsData: any[][], sheetURL: string): Map<string, Applicant> {
-    const applicants: Map<string, Applicant> = new Map<string, Applicant>();
+export function setApplicants(sheetsData: any[][], sheetID: string): Array<Applicant> {
+    const applicants: Array<Applicant> = [];
     const headers: Map<string, number> = new Map();
 
     parseColumnHeaders(sheetsData[0], headers);
@@ -50,7 +50,7 @@ export function setApplicants(sheetsData: any[][], sheetURL: string): Map<string
 
         // creates applicant using data from the specified columns of the sheet
         const applicant = createApplicant(
-            sheetURL,
+            sheetID,
             row[headers.get('first name')],
             row[headers.get('last name')],
             row[headers.get('email')],
@@ -61,9 +61,7 @@ export function setApplicants(sheetsData: any[][], sheetURL: string): Map<string
             row[headers.get('website')],
             row[headers.get('linkedin')],
         );
-        if (!applicants.has(applicant.email.trim().toLowerCase())) {
-            applicants.set(applicant.email.trim().toLowerCase(), applicant);
-        }
+        applicants.push(applicant);
     }
 
     return applicants;

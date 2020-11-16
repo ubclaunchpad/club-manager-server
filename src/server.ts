@@ -20,7 +20,7 @@ require('./database/mongodb');
 
 server.use(express.json());
 server.use('/applicant', applicantRouter);
-server.use('/sheet', sheetsRouter);
+server.use('/sheets', sheetsRouter);
 
 server.get('/', async (req, res) => {
     res.send('Hello World!');
