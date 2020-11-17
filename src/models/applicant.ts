@@ -7,6 +7,7 @@ export interface IApplicant extends Document {
     role: string;
     major: string;
     yearStanding: string;
+    level: string;
     status: string;
     linkedIn: string;
     website: string;
@@ -38,9 +39,14 @@ const applicantSchema = new Schema({
         type: Number,
         required: true,
     },
+    level: {
+        type: String,
+        enum: ["Beginner", "Intermediate", "Advanced"],
+        required: true,
+    },
     status: {
         type: String,
-        enum: ['Pending', 'Accepted', 'Rejected', 'Scheduled'],
+        enum: ['Pending', 'Screened: Accepted', 'Screened: Rejected', 'Scheduled for Interview', 'Final Decision: Accepted', 'Final Decision: Rejected', 'Archived: Rejected'],
         default: 'Pending',
         required: true,
     },
