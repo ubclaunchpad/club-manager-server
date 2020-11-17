@@ -23,7 +23,7 @@ export const createApplicant = async (req, res) => {
     }
 };
 
-export const updateApplicantStatus = async (req, res) => {
+export const updateApplicantFields = async (req, res) => {
     const valid_status = [
         'Pending',
         'Screened: Accepted',

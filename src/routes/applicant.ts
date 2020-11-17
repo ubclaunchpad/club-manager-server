@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { createApplicant, updateApplicantStatus, listAllApplicants } from '../controllers/applicant';
+import { createApplicant, updateApplicantFields, listAllApplicants } from '../controllers/applicant';
 
 const router = express.Router();
 
@@ -10,6 +10,6 @@ router.get('/', listAllApplicants);
 router.post('/', createApplicant);
 
 /* Sets the status of the applicant matching 'id' */
-router.patch('/', updateApplicantStatus);
+router.patch('/', updateApplicantFields);
 
 export default router;
