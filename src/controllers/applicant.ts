@@ -1,6 +1,7 @@
 import Applicant, { IApplicant } from '../models/applicant';
+import { Request, Response } from 'express';
 
-export const createApplicant = async (req, res) => {
+export const createApplicant = async (req: Request, res: Response): Promise<void> => {
     const new_applicant: IApplicant = new Applicant({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
@@ -21,7 +22,7 @@ export const createApplicant = async (req, res) => {
     }
 };
 
-export const updateApplicantStatus = async (req, res) => {
+export const updateApplicantStatus = async (req: Request, res: Response): Promise<void> => {
     try {
         const valid_status = ['Pending', 'Accepted', 'Rejected', 'Scheduled'];
         const my_applicant = await Applicant.findOne({ _id: req.body.id });
@@ -49,7 +50,7 @@ export const updateApplicantStatus = async (req, res) => {
     }
 };
 
-export const listAllApplicants = async (req, res) => {
+export const listAllApplicants = async (req: Request, res: Response): Promise<void> => {
     try {
         const applicants = await Applicant.find();
         res.status(201).send(applicants);
