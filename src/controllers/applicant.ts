@@ -54,6 +54,7 @@ export const listAllApplicants = async (req, res) => {
         const applicants = await Applicant.find();
         res.status(201).send(applicants);
     } catch (error) {
+        console.log(error);
         res.status(500).send(error);
     }
 };

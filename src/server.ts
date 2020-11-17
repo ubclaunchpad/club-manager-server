@@ -1,5 +1,6 @@
 import express from 'express';
 import * as bodyParser from 'body-parser';
+import cors from 'cors';
 import { emailRouter } from './routes/email';
 import { authRouter } from './routes/auth';
 import { ensureAuthenticated } from './utils/auth/auth-utils';
@@ -7,6 +8,9 @@ import applicantRouter from './routes/applicant';
 
 const PORT = process.env.PORT || 4000;
 const server = express();
+
+// Enable Cross Origin Resource Sharing
+server.use(cors());
 
 // parse application/json
 server.use(bodyParser.json());
