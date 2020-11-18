@@ -4,7 +4,7 @@ import Applicant, { IApplicant } from '../models/applicant';
 import ScreeningGrade, { IScreeningGrade } from '../models/screening-grade';
 
 export const createApplicant = async (req: Request, res: Response): Promise<void> => {
-    const new_applicant: IApplicant = new Applicant({
+    const newApplicant: IApplicant = new Applicant({
         _id: new mongoose.Types.ObjectId(),
         firstName: req.body.firstName,
         lastName: req.body.lastName,
@@ -18,9 +18,9 @@ export const createApplicant = async (req: Request, res: Response): Promise<void
     });
 
     try {
-        await new_applicant.save(async () => {
-            const new_grade: IScreeningGrade = new ScreeningGrade({
-                applicant: new_applicant._id,
+        await newApplicant.save(async () => {
+            const newGrade: IScreeningGrade = new ScreeningGrade({
+                applicant: newApplicant._id,
                 c1: req.body.c1,
                 c2: req.body.c2,
                 c3: req.body.c3,
@@ -35,7 +35,7 @@ export const createApplicant = async (req: Request, res: Response): Promise<void
                     parseInt(req.body.c5) +
                     parseInt(req.body.c6),
             });
-            await new_grade.save();
+            await newGrade.save();
         });
         res.status(201).send('Successfully created new applicant.');
     } catch (error) {
@@ -77,6 +77,18 @@ export const listAllApplicants = async (req: Request, res: Response): Promise<vo
         res.status(201).send(applicants);
     } catch (error) {
         console.log(error);
+        res.status(500).send(error);
+    }
+};
+
+export const findGrade = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const grade = await ScreeningGrade.findOne({ applicant: req.body.id });
+        const applicant = await grade.populate('applicant').execPopulate();
+        const applicantJSON = applicant.toJSON();
+        const applicantName = applicantJSON.applicant.firstName + ' ' + applicantJSON.applicant.lastName;
+        res.status(201).send('The total grade for ' + applicantName + ' is: ' + grade.total);
+    } catch (error) {
         res.status(500).send(error);
     }
 };

@@ -62,6 +62,7 @@ const applicantSchema = new Schema({
     screeningGrade: {
         type: Schema.Types.ObjectId,
         ref: 'ScreeningGrade',
+        required: false,
     },
 });
 
