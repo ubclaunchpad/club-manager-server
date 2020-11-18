@@ -81,13 +81,10 @@ export const listAllApplicants = async (req: Request, res: Response): Promise<vo
     }
 };
 
-export const findGrade = async (req: Request, res: Response): Promise<void> => {
+export const findGrade = async (req: Request<any>, res: Response): Promise<void> => {
     try {
-        const grade = await ScreeningGrade.findOne({ applicant: req.body.id });
-        const applicant = await grade.populate('applicant').execPopulate();
-        const applicantJSON = applicant.toJSON();
-        const applicantName = applicantJSON.applicant.firstName + ' ' + applicantJSON.applicant.lastName;
-        res.status(201).send('The total grade for ' + applicantName + ' is: ' + grade.total);
+        const grade = await ScreeningGrade.findOne({ applicant: req.params.applicantId });
+        res.status(201).send(grade);
     } catch (error) {
         res.status(500).send(error);
     }

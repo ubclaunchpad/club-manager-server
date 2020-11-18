@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/', listAllApplicants);
 
 /* Return the grade of an applicant given the id passed into the request body */
-router.post('/grade/', findGrade);
+router.get('/grade/:applicantId/', findGrade);
 
 /* Turns the JSON object passed in the request body into a new applicant */
 router.post('/', createApplicant);
