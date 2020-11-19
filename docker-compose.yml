@@ -18,12 +18,6 @@ services:
     mongodb:
         image: mongo:4.4.1-bionic
         container_name: mongodb
-        environment:
-            MONGODB_INITDB_ROOT_USERNAME: dev
-            MONGODB_INIT_ROOT_PASSWORD: dev_password
-            MONGODB_INIT_ROOT_DATABASE: db
-            MONGODB_DATA_DIR: /data/db
-            MONGODB_LOG_DIR: /dev/null
         ports: [
             27017:27017
         ]
