@@ -1,7 +1,8 @@
 import Applicant, { IApplicant } from '../models/applicant';
+import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 
-export const createApplicant = async (req, res) => {
+export const createApplicant = async (req: Request, res: Response): Promise<void> => {
     const new_applicant: IApplicant = new Applicant({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
@@ -23,7 +24,7 @@ export const createApplicant = async (req, res) => {
     }
 };
 
-export const updateApplicantFields = async (req, res) => {
+export const updateApplicantFields = async (req: Request, res: Response): Promise<void> => {
     const valid_status = [
         'Pending',
         'Screened: Accepted',
@@ -85,7 +86,7 @@ export const updateApplicantFields = async (req, res) => {
     }
 };
 
-export const listAllApplicants = async (req, res) => {
+export const listAllApplicants = async (req: Request, res: Response): Promise<void> => {
     try {
         const applicants = await Applicant.find();
         res.status(201).send(applicants);
