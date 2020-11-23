@@ -10,6 +10,6 @@ router.get('/', listAllApplicants);
 router.post('/', createApplicant);
 
 /* Sets the status of the applicant matching 'id' */
-router.patch('/', updateApplicantFields);
+router.patch('/:id', updateApplicantFields);
 
 export default router;

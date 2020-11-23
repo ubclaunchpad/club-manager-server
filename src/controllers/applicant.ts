@@ -34,13 +34,13 @@ export const updateApplicantFields = async (req, res) => {
         'Archived: Rejected',
     ];
     const valid_level = ['Beginner', 'Intermediate', 'Advanced'];
-    const allowed_updates = ['id', 'status', 'level']; // id is passed in the body but is not an update
+    const allowed_updates = ['status', 'level']; // id is passed in the body but is not an update
 
     // Check for a valid id
-    if (!req.body.id) {
+    if (!req.params.id) {
         res.status(400).send('No id specified');
         return;
-    } else if (!mongoose.Types.ObjectId.isValid(req.body.id)) {
+    } else if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
         res.status(400).send('Request supplied an invalid id.');
         return;
     }
@@ -67,7 +67,7 @@ export const updateApplicantFields = async (req, res) => {
 
     try {
         // Check that applicant exists
-        const my_applicant = await Applicant.findOne({ _id: req.body.id });
+        const my_applicant = await Applicant.findOne({ _id: req.params.id });
         if (!my_applicant) {
             res.status(404).send('No applicants match that id');
             return;
