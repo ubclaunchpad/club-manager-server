@@ -1,7 +1,8 @@
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
 import { Document, Model, Schema } from 'mongoose';
 
 export interface IApplicant extends Document {
+    _id: Schema.Types.ObjectId;
     firstName: string;
     lastName: string;
     role: string;
@@ -12,9 +13,11 @@ export interface IApplicant extends Document {
     linkedIn: string;
     website: string;
     resume: string;
+    screeningGrade: { type: Schema.Types.ObjectId; ref: 'ScreeningGrade' };
 }
 
 const applicantSchema = new Schema({
+    _id: Schema.Types.ObjectId,
     firstName: {
         type: String,
         trim: true,
@@ -68,6 +71,11 @@ const applicantSchema = new Schema({
     },
     resume: {
         type: String,
+        required: false,
+    },
+    screeningGrade: {
+        type: Schema.Types.ObjectId,
+        ref: 'ScreeningGrade',
         required: false,
     },
 });
