@@ -27,7 +27,7 @@ export interface IInterviewGrade extends Document {
     conclusion: {
         commitment: string;
         questions?: string;
-    }
+    };
     debrief: number; // the level from 1-3 you rate as how much you would want to work with this person
 }
 
@@ -79,7 +79,7 @@ const gradeSchema = new Schema({
         comments: {
             type: String,
             required: false,
-        }
+        },
     },
     depth: {
         topic: {
@@ -97,7 +97,7 @@ const gradeSchema = new Schema({
         comments: {
             type: String,
             required: false,
-        }
+        },
     },
     whiteboard: {
         question: {
@@ -113,7 +113,7 @@ const gradeSchema = new Schema({
         comments: {
             type: String,
             required: false,
-        }
+        },
     },
     conclusion: {
         commitment: {
@@ -125,14 +125,14 @@ const gradeSchema = new Schema({
         questions: {
             type: String,
             required: false,
-        }
+        },
     },
     debrief: {
         type: Number,
         enum: [1, 2, 3],
         default: 1,
         required: true,
-    }
+    },
 });
 
 const InterviewGrade: Model<IInterviewGrade> = mongoose.model('InterviewGrade', gradeSchema);

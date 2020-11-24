@@ -14,7 +14,7 @@ export interface IApplicant extends Document {
     website: string;
     resume: string;
     screeningGrade: { type: Schema.Types.ObjectId; ref: 'ScreeningGrade' };
-    interviewGrade: { type: Schema.Types.ObjectId; ref: 'InterviewGrade' }
+    interviewGrade: { type: Schema.Types.ObjectId; ref: 'InterviewGrade' };
 }
 
 const applicantSchema = new Schema({
@@ -84,8 +84,8 @@ const applicantSchema = new Schema({
     interviewGrade: {
         type: Schema.Types.ObjectId,
         ref: 'InterviewGrade',
-        required: false,  
-    }
+        required: false,
+    },
 });
 
 const Applicant: Model<IApplicant> = mongoose.model('Applicant', applicantSchema);

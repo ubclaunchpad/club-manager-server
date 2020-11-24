@@ -1,8 +1,6 @@
 import mongoose from 'mongoose';
 import { Request, Response } from 'express';
 import Applicant, { IApplicant } from '../models/applicant';
-import ScreeningGrade, { IScreeningGrade } from '../models/screening-grade';
-import InterviewGrade, { IInterviewGrade } from '../models/interview-grade';
 
 export const createApplicant = async (req: Request, res: Response): Promise<void> => {
     const newApplicant: IApplicant = new Applicant({
