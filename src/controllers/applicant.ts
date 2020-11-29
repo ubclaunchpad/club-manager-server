@@ -8,6 +8,7 @@ export const createApplicant = async (req: Request, res: Response): Promise<void
         _id: new mongoose.Types.ObjectId(),
         firstName: req.body.firstName,
         lastName: req.body.lastName,
+        email: req.body.email,
         role: req.body.role,
         major: req.body.major,
         yearStanding: req.body.yearStanding,
@@ -15,6 +16,7 @@ export const createApplicant = async (req: Request, res: Response): Promise<void
         linkedIn: req.body.linkedIn,
         website: req.body.website,
         resume: req.body.resume,
+        sheetURL: req.body.sheetURL,
     });
 
     try {

@@ -25,6 +25,6 @@ const sheetSchema = new Schema({
     },
 });
 
-const Sheet: Model<ISheet> = mongoose.model('Schema', sheetSchema);
+const Sheet: Model<ISheet> = mongoose.model('Sheet', sheetSchema);
 
 export default Sheet;
