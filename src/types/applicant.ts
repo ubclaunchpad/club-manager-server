@@ -1,5 +1,6 @@
 /** @description Represents an applicant with the listed fields */
 export interface Applicant {
+    sheetID: string;
     firstName: string;
     lastName: string;
     email: string;
@@ -17,6 +18,7 @@ export interface Applicant {
  * @constructor
  */
 function createApplicant(
+    sheetID: string,
     firstName: string,
     lastName: string,
     email: string,
@@ -27,15 +29,16 @@ function createApplicant(
     website?: string,
     linkedin?: string,
 ) {
-    const applicant: Applicant = { firstName, lastName, email, year, major, role, resume, website, linkedin };
+    const applicant: Applicant = { sheetID, firstName, lastName, email, year, major, role, resume, website, linkedin };
     return applicant;
 }
 
 /**
  * @description Creates a list of applicants by parsing the Google sheet with given URL and sheet name
  * @param {any[][]} sheetsData - The parsed data from a Google sheet.
+ * @param {string} sheetID - The sheet id from which the users are being imported
  */
-export function setApplicants(sheetsData: any[][]): Array<Applicant> {
+export function setApplicants(sheetsData: any[][], sheetID: string): Array<Applicant> {
     const applicants: Array<Applicant> = [];
     const headers: Map<string, number> = new Map();
 
@@ -47,6 +50,7 @@ export function setApplicants(sheetsData: any[][]): Array<Applicant> {
 
         // creates applicant using data from the specified columns of the sheet
         const applicant = createApplicant(
+            sheetID,
             row[headers.get('first name')],
             row[headers.get('last name')],
             row[headers.get('email')],
