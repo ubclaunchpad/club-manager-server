@@ -51,9 +51,11 @@ const applicantSchema = new Schema({
         type: String,
         enum: [
             'Pending',
+            'Screened',
             'Screened: Accepted',
             'Screened: Rejected',
             'Scheduled for Interview',
+            'Interviewed',
             'Final Decision: Accepted',
             'Final Decision: Rejected',
             'Archived: Rejected',

@@ -47,13 +47,16 @@ export const createApplicant = async (req: Request, res: Response): Promise<void
 export const updateApplicantFields = async (req: Request, res: Response): Promise<void> => {
     const valid_status = [
         'Pending',
+        'Screened',
         'Screened: Accepted',
         'Screened: Rejected',
         'Scheduled for Interview',
+        'Interviewed',
         'Final Decision: Accepted',
         'Final Decision: Rejected',
         'Archived: Rejected',
     ];
+
     const valid_level = ['Beginner', 'Intermediate', 'Advanced'];
     const allowed_updates = ['status', 'level']; // id is passed in the body but is not an update
 
