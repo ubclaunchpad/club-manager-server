@@ -11,6 +11,7 @@ export const createApplicant = async (req: Request, res: Response): Promise<void
         role: req.body.role,
         major: req.body.major,
         yearStanding: req.body.yearStanding,
+        level: req.body.level,
         status: req.body.status,
         linkedIn: req.body.linkedIn,
         website: req.body.website,
@@ -43,29 +44,66 @@ export const createApplicant = async (req: Request, res: Response): Promise<void
     }
 };
 
-export const updateApplicantStatus = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const valid_status = ['Pending', 'Accepted', 'Rejected', 'Scheduled'];
-        const my_applicant = await Applicant.findOne({ _id: req.body.id });
+export const updateApplicantFields = async (req: Request, res: Response): Promise<void> => {
+    const valid_status = [
+        'Pending',
+        'Screened',
+        'Screened: Accepted',
+        'Screened: Rejected',
+        'Scheduled for Interview',
+        'Interviewed',
+        'Final Decision: Accepted',
+        'Final Decision: Rejected',
+        'Archived: Rejected',
+    ];
 
-        // Check that status is valid
-        if (!valid_status.includes(req.body.status)) {
-            res.status(400).send(`"${req.body.status}" is not a valid status.`);
+    const valid_level = ['Beginner', 'Intermediate', 'Advanced'];
+    const allowed_updates = ['status', 'level']; // id is passed in the body but is not an update
+
+    // Check for a valid id
+    if (!req.params.id) {
+        res.status(400).send('No id specified');
+        return;
+    } else if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        res.status(400).send('Request supplied an invalid id.');
+        return;
+    }
+
+    // Validate the keys
+    const updates = Object.keys(req.body);
+    const valid = updates.every((field) => {
+        return allowed_updates.includes(field);
+    });
+    if (!valid) {
+        res.status(400).send('Invalid updates requested');
+        return;
+    }
+
+    // Validate the new values
+    if (updates.includes('status') && !valid_status.includes(req.body.status)) {
+        res.status(400).send(`"${req.body.status}" is not a valid status.`);
+        return;
+    }
+    if (updates.includes('level') && !valid_level.includes(req.body.level)) {
+        res.status(400).send(`"${req.body.level}" is not a valid level.`);
+        return;
+    }
+
+    try {
+        // Check that applicant exists
+        const my_applicant = await Applicant.findById(req.params.id);
+        if (!my_applicant) {
+            res.status(404).send('No applicants match that id');
+            return;
         }
-        // Check that applicant exists in the database
-        else if (my_applicant == null) {
-            res.status(400).send('No applicants match that id');
-        }
-        // Idempotent when status would be unchanged
-        else if (my_applicant.status === req.body.status) {
-            res.status(200).send(`Status already set to "${req.body.status}"`);
-        }
-        // Update the applicant's status
-        else {
-            my_applicant.status = req.body.status;
-            await my_applicant.save();
-            res.status(200).send(`Successfully set status to "${req.body.status}"`);
-        }
+
+        // Apply the updates
+        updates.forEach((update) => {
+            my_applicant[update] = req.body[update];
+        });
+
+        await my_applicant.save();
+        res.status(200).send('Successfully updated the applicant with all the supplied fields');
     } catch (error) {
         res.status(500).send(error);
     }
