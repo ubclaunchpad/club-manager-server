@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { createApplicant, updateApplicantStatus, listAllApplicants, findGrade } from '../controllers/applicant';
+import { createApplicant, updateApplicantFields, listAllApplicants, findGrade } from '../controllers/applicant';
 
 const router = express.Router();
 
@@ -13,6 +13,6 @@ router.get('/grade/:applicantId/', findGrade);
 router.post('/', createApplicant);
 
 /* Sets the status of the applicant matching 'id' */
-router.patch('/', updateApplicantStatus);
+router.patch('/:id', updateApplicantFields);
 
 export default router;
