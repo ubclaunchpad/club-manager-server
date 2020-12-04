@@ -17,7 +17,6 @@ export const createApplicant = async (req: Request, res: Response): Promise<void
         linkedIn: req.body.linkedIn,
         website: req.body.website,
         resume: req.body.resume,
-        sheetURL: req.body.sheetURL,
     });
 
     try {
