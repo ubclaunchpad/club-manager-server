@@ -3,7 +3,7 @@ import { Applicant } from '../types/applicant';
 import ApplicantModel, { IApplicant } from '../models/applicant';
 import Sheet, { ISheet } from '../models/sheet';
 import { Request, Response } from 'express';
-import mongoose, {Schema} from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 /**
  * @description Gets the applicants using the Google Sheet info from the given JSON object in request body
@@ -61,8 +61,8 @@ export const updateSheet = async (req: Request, res: Response): Promise<void> =>
             );
 
             // this makes sure applicants no longer in the sheet being updated are deleted
-            await ApplicantModel.updateMany({}, { $pullAll: { sheets: [sheet._id] }});
-            await ApplicantModel.deleteMany({ sheets: []});
+            await ApplicantModel.updateMany({}, { $pullAll: { sheets: [sheet._id] } });
+            await ApplicantModel.deleteMany({ sheets: [] });
 
             const added = await addApplicants(applicants, sheet._id);
 
@@ -90,8 +90,8 @@ export const deleteSheet = async (req: Request, res: Response): Promise<void> =>
         if (sheet == null) {
             res.status(400).send('Sheet does not exist');
         } else {
-            await ApplicantModel.deleteMany({ sheets: [sheet._id]});
-            await ApplicantModel.updateMany({}, { $pullAll: { sheets: [sheet._id] }});
+            await ApplicantModel.deleteMany({ sheets: [sheet._id] });
+            await ApplicantModel.updateMany({}, { $pullAll: { sheets: [sheet._id] } });
             res.status(200).send('Sheet and linked applicants successfully deleted');
         }
     } catch (e) {
