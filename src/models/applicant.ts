@@ -15,7 +15,7 @@ export interface IApplicant extends Document {
     website: string;
     resume: string;
     screeningGrade: { type: Schema.Types.ObjectId; ref: 'ScreeningGrade' };
-    sheetURL: string;
+    sheets: Array<Schema.Types.ObjectId>;
 }
 
 const applicantSchema = new Schema({
@@ -86,8 +86,8 @@ const applicantSchema = new Schema({
         ref: 'ScreeningGrade',
         required: false,
     },
-    sheetURL: {
-        type: String,
+    sheets: {
+        type: Array,
         required: false,
     },
 });

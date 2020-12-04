@@ -1,9 +1,9 @@
 import { getSheetData } from '../utils/gsuite/sheets';
 import { Applicant } from '../types/applicant';
-import ApplicantDB, { IApplicant } from '../models/applicant';
+import ApplicantModel, { IApplicant } from '../models/applicant';
 import Sheet, { ISheet } from '../models/sheet';
 import { Request, Response } from 'express';
-import mongoose from 'mongoose';
+import mongoose, {Schema} from 'mongoose';
 
 /**
  * @description Gets the applicants using the Google Sheet info from the given JSON object in request body
@@ -12,6 +12,7 @@ import mongoose from 'mongoose';
 export const postSheet = async (req: Request, res: Response): Promise<void> => {
     try {
         const sheet: ISheet = new Sheet({
+            _id: new mongoose.Types.ObjectId(),
             sheetURL: req.body.url,
             sheetName: req.body.name,
             email: req.body.email,
@@ -27,7 +28,7 @@ export const postSheet = async (req: Request, res: Response): Promise<void> => {
                 req.body.key,
             );
 
-            const added = await addApplicants(applicants);
+            const added = await addApplicants(applicants, sheet._id);
 
             if (added) {
                 await sheet.save();
@@ -59,7 +60,11 @@ export const updateSheet = async (req: Request, res: Response): Promise<void> =>
                 req.body.key,
             );
 
-            const added = await addApplicants(applicants);
+            // this makes sure applicants no longer in the sheet being updated are deleted
+            await ApplicantModel.updateMany({}, { $pullAll: { sheets: [sheet._id] }});
+            await ApplicantModel.deleteMany({ sheets: []});
+
+            const added = await addApplicants(applicants, sheet._id);
 
             if (added) {
                 res.status(200).send('Sheet successfully updated');
@@ -75,46 +80,60 @@ export const updateSheet = async (req: Request, res: Response): Promise<void> =>
 };
 
 /**
- * @description Deletes the Google Sheet and the applicants linked to the given sheet
+ * @description Deletes the Google Sheet and the applicants linked to only the given sheet
+ *              If applicant is also linked to other sheets, will only remove link to given sheet
  */
 export const deleteSheet = async (req: Request, res: Response): Promise<void> => {
     try {
-        await Sheet.deleteMany({ sheetURL: req.body.url });
+        const sheet: ISheet = await Sheet.findOneAndDelete({ sheetURL: req.body.url });
 
-        await ApplicantDB.deleteMany({ sheetURL: req.body.url });
-
-        res.status(200).send('Sheet and linked applicants successfully deleted');
+        if (sheet == null) {
+            res.status(400).send('Sheet does not exist');
+        } else {
+            await ApplicantModel.deleteMany({ sheets: [sheet._id]});
+            await ApplicantModel.updateMany({}, { $pullAll: { sheets: [sheet._id] }});
+            res.status(200).send('Sheet and linked applicants successfully deleted');
+        }
     } catch (e) {
         res.status(500).send(e.message);
     }
 };
 
 /**
- * @description Adds applicants to database if not already there
+ * @description Adds applicants to database if not already there, otherwise updates it from the new sheet
  * @param {Array<Applicant>} applicants - applicants parsed from Google sheet
+ * @param {Schema.Types.ObjectId} sheet - ObjectId of the linked sheet
  */
-const addApplicants = async (applicants: Array<Applicant>): Promise<boolean> => {
+const addApplicants = async (applicants: Array<Applicant>, sheet: Schema.Types.ObjectId): Promise<boolean> => {
     for (const applicant of applicants) {
         try {
-            const exists: boolean = await ApplicantDB.exists({ email: applicant.email });
+            const iApplicant: IApplicant = await ApplicantModel.findOneAndDelete({ email: applicant.email });
+            let new_sheets: Array<Schema.Types.ObjectId> = [];
 
-            if (!exists) {
-                const newApplicant: IApplicant = new ApplicantDB({
-                    _id: new mongoose.Types.ObjectId(),
-                    firstName: applicant.firstName,
-                    lastName: applicant.lastName,
-                    email: applicant.email,
-                    role: applicant.role,
-                    major: applicant.major,
-                    yearStanding: applicant.year,
-                    status: 'Pending',
-                    linkedIn: applicant.linkedin,
-                    website: applicant.website,
-                    resume: applicant.resume,
-                    sheetURL: applicant.sheetURL,
-                });
-                await newApplicant.save();
+            if (iApplicant != null) {
+                new_sheets = iApplicant.sheets;
             }
+            if (!new_sheets.includes(sheet)) {
+                new_sheets.push(sheet);
+            }
+
+            const newApplicant: IApplicant = new ApplicantModel({
+                _id: new mongoose.Types.ObjectId(),
+                firstName: applicant.firstName,
+                lastName: applicant.lastName,
+                email: applicant.email,
+                role: applicant.role,
+                major: applicant.major,
+                yearStanding: applicant.year,
+                level: 'Beginner',
+                status: 'Pending',
+                linkedIn: applicant.linkedin,
+                website: applicant.website,
+                resume: applicant.resume,
+                sheets: new_sheets,
+            });
+
+            await newApplicant.save();
         } catch (e) {
             return false;
         }

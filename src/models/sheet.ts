@@ -2,12 +2,14 @@ import * as mongoose from 'mongoose';
 import { Document, Model, Schema } from 'mongoose';
 
 export interface ISheet extends Document {
+    _id: Schema.Types.ObjectId;
     sheetURL: string;
     sheetName: string;
     email: string;
 }
 
 const sheetSchema = new Schema({
+    _id: Schema.Types.ObjectId,
     sheetURL: {
         type: String,
         trim: true,
