@@ -86,10 +86,7 @@ const applicantSchema = new Schema({
         ref: 'ScreeningGrade',
         required: false,
     },
-    sheets: {
-        type: Array,
-        required: false,
-    },
+    sheets: [{ type: Schema.Types.ObjectId, required: false }],
 });
 
 const Applicant: Model<IApplicant> = mongoose.model('Applicant', applicantSchema);
