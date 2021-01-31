@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { createApplicant, updateApplicantFields, listAllApplicants, findGrade } from '../controllers/applicant';
+import { createApplicant, updateApplicantFields, listAllApplicants } from '../controllers/applicant';
 
 const router = express.Router();
 
