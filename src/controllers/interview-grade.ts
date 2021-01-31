@@ -8,7 +8,7 @@ export const createInterviewGrade = async (req: Request<any>, res: Response): Pr
         const newInterviewGrade: IInterviewGrade = new InterviewGrade({
             applicant: applicant._id,
             applicantName: applicant.firstName + ' ' + applicant.lastName,
-            experienceLvl: req.body.experienceLvl,
+            experienceLevel: req.body.experienceLevel,
             interviewer1: req.body.interviewer1,
             interviewer2: req.body.interviewer2,
             date: new Date(req.body.date).toLocaleDateString('en-US'),

@@ -4,7 +4,7 @@ import { Document, Model, Schema } from 'mongoose';
 export interface IInterviewGrade extends Document {
     applicant: { type: Schema.Types.ObjectId; ref: 'Applicant' };
     applicantName: string;
-    experienceLvl: string;
+    experienceLevel: string;
     interviewer1: string;
     interviewer2?: string;
     date: Date;
@@ -41,7 +41,7 @@ const gradeSchema = new Schema({
         type: String,
         required: true,
     },
-    experienceLvl: {
+    experienceLevel: {
         type: String,
         enum: ['Beginner', 'Independent', 'Experienced'],
         default: 'Beginner',
