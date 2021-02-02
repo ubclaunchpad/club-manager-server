@@ -6,6 +6,7 @@ import { authRouter } from './routes/auth';
 import { ensureAuthenticated } from './utils/auth/auth-utils';
 import applicantRouter from './routes/applicant';
 import sheetsRouter from './routes/sheets';
+import gradeRouter from './routes/grade';
 
 const PORT = process.env.PORT || 4000;
 const server = express();
@@ -25,6 +26,7 @@ require('./database/mongodb');
 server.use(express.json());
 server.use('/applicant', applicantRouter);
 server.use('/sheets', sheetsRouter);
+server.use('/grade', gradeRouter);
 
 server.get('/', async (req, res) => {
     res.send('Hello World!');
