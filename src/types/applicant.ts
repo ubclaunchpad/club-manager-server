@@ -1,6 +1,6 @@
 /** @description Represents an applicant with the listed fields */
 export interface Applicant {
-    sheetID: string;
+    sheetURL: string;
     firstName: string;
     lastName: string;
     email: string;
@@ -10,7 +10,6 @@ export interface Applicant {
     resume: string;
     website?: string;
     linkedin?: string;
-    [propName: string]: any; // Future-proofing for cases where applicant can have other properties
 }
 
 /**
@@ -18,7 +17,7 @@ export interface Applicant {
  * @constructor
  */
 function createApplicant(
-    sheetID: string,
+    sheetURL: string,
     firstName: string,
     lastName: string,
     email: string,
@@ -29,16 +28,16 @@ function createApplicant(
     website?: string,
     linkedin?: string,
 ) {
-    const applicant: Applicant = { sheetID, firstName, lastName, email, year, major, role, resume, website, linkedin };
+    const applicant: Applicant = { sheetURL, firstName, lastName, email, year, major, role, resume, website, linkedin };
     return applicant;
 }
 
 /**
  * @description Creates a list of applicants by parsing the Google sheet with given URL and sheet name
  * @param {any[][]} sheetsData - The parsed data from a Google sheet.
- * @param {string} sheetID - The sheet id from which the users are being imported
+ * @param {string} sheetURL - The sheet url from which the users are being imported
  */
-export function setApplicants(sheetsData: any[][], sheetID: string): Array<Applicant> {
+export function setApplicants(sheetsData: any[][], sheetURL: string): Array<Applicant> {
     const applicants: Array<Applicant> = [];
     const headers: Map<string, number> = new Map();
 
@@ -50,7 +49,7 @@ export function setApplicants(sheetsData: any[][], sheetID: string): Array<Appli
 
         // creates applicant using data from the specified columns of the sheet
         const applicant = createApplicant(
-            sheetID,
+            sheetURL,
             row[headers.get('first name')],
             row[headers.get('last name')],
             row[headers.get('email')],

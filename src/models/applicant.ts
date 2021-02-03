@@ -5,6 +5,7 @@ export interface IApplicant extends Document {
     _id: Schema.Types.ObjectId;
     firstName: string;
     lastName: string;
+    email: string;
     role: string;
     major: string;
     yearStanding: string;
@@ -15,6 +16,7 @@ export interface IApplicant extends Document {
     resume: string;
     screeningGrade: { type: Schema.Types.ObjectId; ref: 'ScreeningGrade' };
     interviewGrade: { type: Schema.Types.ObjectId; ref: 'InterviewGrade' };
+    sheets: Array<Schema.Types.ObjectId>;
 }
 
 const applicantSchema = new Schema({
@@ -27,6 +29,10 @@ const applicantSchema = new Schema({
     lastName: {
         type: String,
         trim: true,
+        required: true,
+    },
+    email: {
+        type: String,
         required: true,
     },
     role: {
@@ -86,6 +92,7 @@ const applicantSchema = new Schema({
         ref: 'InterviewGrade',
         required: false,
     },
+    sheets: [{ type: Schema.Types.ObjectId, required: false }],
 });
 
 const Applicant: Model<IApplicant> = mongoose.model('Applicant', applicantSchema);

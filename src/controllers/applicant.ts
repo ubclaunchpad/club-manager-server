@@ -7,6 +7,7 @@ export const createApplicant = async (req: Request, res: Response): Promise<void
         _id: new mongoose.Types.ObjectId(),
         firstName: req.body.firstName,
         lastName: req.body.lastName,
+        email: req.body.email,
         role: req.body.role,
         major: req.body.major,
         yearStanding: req.body.yearStanding,

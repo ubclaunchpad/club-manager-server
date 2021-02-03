@@ -34,33 +34,31 @@ const client = (clientEmail: string, clientKey: string) => {
  * @param {string} clientEmail - The client service account email
  * @param {string} clientKey - The client API access key
  */
-export async function getSheetData(
+export const getSheetData = async (
     url: string,
     sheetName: string,
     clientEmail: string,
     clientKey: string,
-): Promise<Array<Applicant>> {
+): Promise<Array<Applicant>> => {
     const sheetsClient = client(clientEmail, clientKey);
     const gsapi = google.sheets({ version: 'v4', auth: sheetsClient });
 
-    const id = getSheetID(url);
-
     const opt = {
-        spreadsheetId: id,
+        spreadsheetId: getSheetID(url),
         range: `${sheetName}`,
     };
 
     const data = await gsapi.spreadsheets.values.get(opt);
 
-    return setApplicants(data.data.values, id);
-}
+    return setApplicants(data.data.values, url);
+};
 
 /**
  * @description Extracts sheet id from url
  * @param {string} url - The url of the google sheet
  */
-function getSheetID(url: string) {
+const getSheetID = (url: string): string => {
     let id = url.match('/spreadsheets\\/d\\/([a-zA-Z0-9-_]+)')[0];
     id = id.replace('/spreadsheets/d/', '');
     return id;
-}
+};
