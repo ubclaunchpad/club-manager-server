@@ -2,25 +2,23 @@ import mongoose from 'mongoose';
 import { Document, Model, Schema } from 'mongoose';
 
 export interface IApplicant extends Document {
-    _id: Schema.Types.ObjectId;
     firstName: string;
     lastName: string;
     email: string;
     role: string;
     major: string;
-    yearStanding: string;
+    yearStanding: number;
     level: string;
     status: string;
-    linkedIn: string;
-    website: string;
-    resume: string;
-    screeningGrade: { type: Schema.Types.ObjectId; ref: 'ScreeningGrade' };
-    interviewGrade: { type: Schema.Types.ObjectId; ref: 'InterviewGrade' };
-    sheets: Array<Schema.Types.ObjectId>;
+    linkedIn?: string;
+    website?: string;
+    resume?: string;
+    screeningGrade?: { type: Schema.Types.ObjectId; ref: 'ScreeningGrade' };
+    interviewGrade?: { type: Schema.Types.ObjectId; ref: 'InterviewGrade' };
+    sheets?: Array<Schema.Types.ObjectId>;
 }
 
 const applicantSchema = new Schema({
-    _id: Schema.Types.ObjectId,
     firstName: {
         type: String,
         trim: true,

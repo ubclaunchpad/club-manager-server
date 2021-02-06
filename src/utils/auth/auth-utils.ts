@@ -70,7 +70,7 @@ export const authenticate = async (scopes: string[], authClient: OAuth2Client): 
  * @description Middleware function to ensure the user is authenticated to make the Gmail API call
  */
 export const ensureAuthenticated = () =>
-    async function (req: Request, res: Response, next: () => Promise<() => void>): Promise<() => void> {
+    async function (req: Request, res: Response, next: any): Promise<() => void> {
         // set the credential file path
         const scopes = req.body.scopes;
         const keyPath = path.join(__dirname, '..', '..', 'credentials', 'client_secret.json');
