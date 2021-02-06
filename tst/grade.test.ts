@@ -8,7 +8,7 @@ import InterviewGrade from '../src/models/interview-grade';
 describe("Applicant's ScreeningGrade + InterviewGrade Get", () => {
     beforeEach((done) => {
         // try switching to mongodb://127.0.0.1:27017/JestDB if not working on a local instace
-        mongoose.connect('mongodb://mongodb:27017/JestDB', { useNewUrlParser: true, useUnifiedTopology: true }, () =>
+        mongoose.connect('mongodb://127.0.0.1:27017/JestDB', { useNewUrlParser: true, useUnifiedTopology: true }, () =>
             done(),
         );
     });
