@@ -6,7 +6,7 @@ import ScreeningGrade from '../src/models/screening-grade';
 import InterviewGrade from '../src/models/interview-grade';
 
 describe("Applicant's ScreeningGrade + InterviewGrade Get", () => {
-    const ENDPOINT = process.env.ENDPOINT_DB || 'mongodb://mongodb:27017/JestDB'; // try switching to mongodb://127.0.0.1:27017/JestDB if not working on a local instace
+    const ENDPOINT = process.env.MONGO_URL;
 
     beforeEach((done) => {
         mongoose.connect(ENDPOINT, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true });
