@@ -100,6 +100,19 @@ export const deleteSheet = async (req: Request, res: Response): Promise<void> =>
 };
 
 /**
+ * @description Lists all the Google Sheets in the database
+ */
+export const listAllSheets = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const sheets = await Sheet.find();
+        res.status(201).send(sheets);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send(error);
+    }
+};
+
+/**
  * @description Adds applicants to database if not already there, otherwise updates it from the new sheet
  * @param {Array<Applicant>} applicants - applicants parsed from Google sheet
  * @param {Schema.Types.ObjectId} sheet - ObjectId of the linked sheet
