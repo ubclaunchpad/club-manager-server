@@ -6,9 +6,10 @@ import ScreeningGrade from '../src/models/screening-grade';
 import InterviewGrade from '../src/models/interview-grade';
 
 describe("Applicant's ScreeningGrade + InterviewGrade Get", () => {
+    const ENDPOINT = process.env.ENDPOINT_DB || 'mongodb://mongodb:27017/JestDB'; // try switching to mongodb://127.0.0.1:27017/JestDB if not working on a local instace
+
     beforeEach((done) => {
-        // try switching to mongodb://127.0.0.1:27017/JestDB if not working on a local instace
-        mongoose.connect('mongodb://127.0.0.1:27017/JestDB', { useNewUrlParser: true, useUnifiedTopology: true });
+        mongoose.connect(ENDPOINT, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true });
         mongoose.connection.on('connected', () => done());
     });
 

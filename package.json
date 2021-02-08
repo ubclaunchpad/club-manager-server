@@ -65,5 +65,8 @@
         ],
         "exec": "yarn start",
         "ext": "ts"
+    },
+    "jest": {
+        "testEnvironment": "ts-node"
     }
 }
