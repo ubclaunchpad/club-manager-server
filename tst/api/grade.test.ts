@@ -5,7 +5,7 @@ import Applicant from '../../src/models/applicant';
 import ScreeningGrade from '../../src/models/screening-grade';
 import InterviewGrade from '../../src/models/interview-grade';
 
-describe("ScreeningGrade + InterviewGrade Get", () => {
+describe('ScreeningGrade + InterviewGrade Get', () => {
     const ENDPOINT = process.env.MONGO_URL;
 
     beforeEach((done) => {

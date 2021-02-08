@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import supertest from 'supertest';
 import Applicant from '../../src/models/applicant';
 
-describe("Applicant Get", () => {
+describe('Applicant Get', () => {
     const ENDPOINT = process.env.MONGO_URL;
 
     beforeEach((done) => {
