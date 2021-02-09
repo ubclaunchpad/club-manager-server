@@ -21,7 +21,7 @@ export interface IInterviewGrade extends Document {
     };
     whiteboard: {
         question: string;
-        score: string;
+        score: number;
         comments?: string;
     };
     conclusion: {

@@ -4,7 +4,6 @@ import Applicant, { IApplicant } from '../models/applicant';
 
 export const createApplicant = async (req: Request, res: Response): Promise<void> => {
     const newApplicant: IApplicant = new Applicant({
-        _id: new mongoose.Types.ObjectId(),
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
