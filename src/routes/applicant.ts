@@ -1,18 +1,24 @@
 import * as express from 'express';
 import { createApplicant, updateApplicantFields, listAllApplicants, findGrade } from '../controllers/applicant';
+import { verifyToken } from '../middleware/auth-token';
 
 const router = express.Router();
 
 /* Returns a list of all applicants currently in the database */
-router.get('/', listAllApplicants);
+router.get('/', verifyToken, listAllApplicants);
 
 /* Return the grade of an applicant given the id passed into the request body */
-router.get('/grade/:applicantId/', findGrade);
+router.get('/grade/:applicantId/', verifyToken, findGrade);
 
 /* Turns the JSON object passed in the request body into a new applicant */
-router.post('/', createApplicant);
+router.post('/', verifyToken, createApplicant);
 
 /* Sets the status of the applicant matching 'id' */
-router.patch('/:id', updateApplicantFields);
+router.patch('/:id', verifyToken, updateApplicantFields);
+
+/* Endpoint used for sanity checking */
+router.get('/debug', verifyToken, (req, res) => {
+    res.status(200).send('Success');
+});
 
 export default router;
