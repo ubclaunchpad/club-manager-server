@@ -6,6 +6,8 @@ export interface ISheet extends Document {
     sheetURL: string;
     sheetName: string;
     email: string;
+    dateCreated: string;
+    dateUpdated: string;
 }
 
 const sheetSchema = new Schema({
@@ -25,6 +27,14 @@ const sheetSchema = new Schema({
         trim: true,
         required: true,
     },
+    dateAdded: {
+        type: String,
+        required: true,
+    },
+    dateUpdated: {
+        type: String,
+        required: true,
+    }
 });
 
 const Sheet: Model<ISheet> = mongoose.model('Sheet', sheetSchema);
