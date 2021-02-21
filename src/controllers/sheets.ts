@@ -17,7 +17,7 @@ export const postSheet = async (req: Request, res: Response): Promise<void> => {
             sheetName: req.body.name,
             email: req.body.email,
             dateAdded: new Date().toISOString().substring(0, 10),
-            dateUpdated: new Date().toISOString().substring(0, 10)
+            dateUpdated: new Date().toISOString().substring(0, 10),
         });
 
         const exists: boolean = await Sheet.exists({ sheetURL: sheet.sheetURL });
@@ -52,8 +52,11 @@ export const postSheet = async (req: Request, res: Response): Promise<void> => {
  */
 export const updateSheet = async (req: Request, res: Response): Promise<void> => {
     try {
-        const sheet: ISheet = await Sheet.findOne({ sheetURL: req.body.url });
-        await Sheet.update({ sheetURL: req.body.url }, {$set: {dateUpdated: new Date().toISOString().substring(0, 10)}});
+        const sheet: ISheet = await Sheet.findOne({ sheetURL: req.body.url, sheetName: req.body.name });
+        await Sheet.update(
+            { sheetURL: req.body.url, sheetName: req.body.name },
+            { $set: { dateUpdated: new Date().toISOString().substring(0, 10) } },
+        );
 
         if (sheet != null) {
             const applicants: Array<Applicant> = await getSheetData(
@@ -88,7 +91,7 @@ export const updateSheet = async (req: Request, res: Response): Promise<void> =>
  */
 export const deleteSheet = async (req: Request, res: Response): Promise<void> => {
     try {
-        const sheet: ISheet = await Sheet.findOneAndDelete({ sheetURL: req.body.url });
+        const sheet: ISheet = await Sheet.findOneAndDelete({ sheetURL: req.body.url, sheetName: req.body.name });
         if (sheet == null) {
             res.status(400).send('Sheet does not exist');
         } else {

@@ -34,7 +34,7 @@ const sheetSchema = new Schema({
     dateUpdated: {
         type: String,
         required: true,
-    }
+    },
 });
 
 const Sheet: Model<ISheet> = mongoose.model('Sheet', sheetSchema);
