@@ -5,6 +5,7 @@ import { emailRouter } from './routes/email';
 import { authRouter } from './routes/auth';
 import { ensureAuthenticated } from './utils/auth/auth-utils';
 import applicantRouter from './routes/applicant';
+import userRouter from './routes/user';
 import sheetsRouter from './routes/sheets';
 import gradeRouter from './routes/grade';
 
@@ -27,6 +28,7 @@ server.use(express.json());
 server.use('/applicant', applicantRouter);
 server.use('/sheets', sheetsRouter);
 server.use('/grade', gradeRouter);
+server.use('/user', userRouter);
 
 server.get('/', async (req, res) => {
     res.send('Hello World!');
