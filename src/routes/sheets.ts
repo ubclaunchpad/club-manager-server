@@ -1,7 +1,12 @@
 import * as express from 'express';
-import { postSheet, deleteSheet, updateSheet } from '../controllers/sheets';
+import { listAllSheets, postSheet, deleteSheet, updateSheet } from '../controllers/sheets';
 
 const router = express.Router();
+
+/**
+ * @description Lists all the Google Sheets in the database
+ */
+router.get('/', listAllSheets);
 
 /**
  * @description Gets the applicants from the given Google Sheet

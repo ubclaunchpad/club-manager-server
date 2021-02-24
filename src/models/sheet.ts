@@ -6,6 +6,8 @@ export interface ISheet extends Document {
     sheetURL: string;
     sheetName: string;
     email: string;
+    dateCreated: string;
+    dateUpdated: string;
 }
 
 const sheetSchema = new Schema({
@@ -23,6 +25,14 @@ const sheetSchema = new Schema({
     email: {
         type: String,
         trim: true,
+        required: true,
+    },
+    dateAdded: {
+        type: String,
+        required: true,
+    },
+    dateUpdated: {
+        type: String,
         required: true,
     },
 });
