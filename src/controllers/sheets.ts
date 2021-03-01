@@ -26,8 +26,7 @@ export const postSheet = async (req: Request, res: Response): Promise<void> => {
             const applicants: Array<Applicant> = await getSheetData(
                 sheet.sheetURL,
                 sheet.sheetName,
-                sheet.email,
-                req.body.key,
+                req.headers.authorization,
             );
 
             const added = await addApplicants(applicants, sheet._id);
@@ -62,8 +61,7 @@ export const updateSheet = async (req: Request, res: Response): Promise<void> =>
             const applicants: Array<Applicant> = await getSheetData(
                 sheet.sheetURL,
                 sheet.sheetName,
-                sheet.email,
-                req.body.key,
+                req.headers.authorization,
             );
 
             // this makes sure applicants no longer in the sheet being updated are deleted

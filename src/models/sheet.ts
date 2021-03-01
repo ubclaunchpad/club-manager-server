@@ -25,7 +25,7 @@ const sheetSchema = new Schema({
     email: {
         type: String,
         trim: true,
-        required: true,
+        required: false,
     },
     dateAdded: {
         type: String,
