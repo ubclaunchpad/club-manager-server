@@ -1,5 +1,6 @@
 import * as express from 'express';
 import { createApplicant, updateApplicantFields, listAllApplicants } from '../controllers/applicant';
+import { verifyToken } from '../middleware/auth-token';
 
 const router = express.Router();
 
@@ -11,5 +12,10 @@ router.post('/', createApplicant);
 
 /* Sets the status of the applicant matching 'id' */
 router.patch('/:id', updateApplicantFields);
+
+/* Endpoint used for sanity checking */
+router.get('/debug', verifyToken, (req, res) => {
+    res.status(200).send('Success');
+});
 
 export default router;
