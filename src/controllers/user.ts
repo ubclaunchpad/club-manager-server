@@ -27,6 +27,8 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
                     firstName,
                     lastName,
                     email,
+                    organization: "",
+                    schoolName: "",
                 });
                 await newUser.save();
                 res.status(201).send(`New user "${firstName} ${lastName}" created.`);
