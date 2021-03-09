@@ -42,3 +42,18 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
         res.status(500).send(e.message);
     }
 };
+
+/*
+ * Checks if the user corresponding to the auth token is an existing user
+ */
+export const checkUser = async (req: Request, res: Response): Promise<void> => {
+    const googleId = res.locals.userId;
+    const usersMatchingId = await User.find({ googleId: googleId }).catch(() => []);
+
+    if (usersMatchingId.length > 0) {
+        res.status(200).send({ exists: true });
+    }
+    else {
+        res.status(200).send({ exists: false });
+    }
+}
