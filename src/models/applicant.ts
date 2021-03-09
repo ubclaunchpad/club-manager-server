@@ -35,7 +35,7 @@ const applicantSchema = new Schema({
     },
     role: {
         type: String,
-        enum: ['Developer Applicant', 'Designer Applicant'],
+        enum: ['Developer', 'Designer'],
         default: 'Developer',
         required: true,
     },
