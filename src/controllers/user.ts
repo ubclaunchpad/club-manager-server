@@ -12,9 +12,11 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
         const firstName = res.locals.firstname;
         const lastName = res.locals.lastname;
         const email = res.locals.email;
+        const organization = req.body.organization;
+        const schoolName = req.body.schoolName;
 
         // Verify that all fields are present
-        if (firstName && lastName && googleId) {
+        if (firstName && lastName && googleId && email && organization && schoolName) {
             // Verify that the user doesn't exist already
             const usersMatchingId = await User.find({ googleId: googleId }).catch(() => []);
 
@@ -27,8 +29,8 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
                     firstName,
                     lastName,
                     email,
-                    organization: "",
-                    schoolName: "",
+                    organization,
+                    schoolName,
                 });
                 await newUser.save();
                 res.status(201).send(`New user "${firstName} ${lastName}" created.`);
