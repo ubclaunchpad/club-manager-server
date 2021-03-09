@@ -4,6 +4,7 @@ import ApplicantModel, { IApplicant } from '../models/applicant';
 import Sheet, { ISheet } from '../models/sheet';
 import { Request, Response } from 'express';
 import mongoose, { Schema } from 'mongoose';
+import Cookie from 'cookie';
 
 /**
  * @description Gets the applicants using the Google Sheet info from the given JSON object in request body
@@ -11,6 +12,8 @@ import mongoose, { Schema } from 'mongoose';
  */
 export const postSheet = async (req: Request, res: Response): Promise<void> => {
     try {
+        const cookies = Cookie.parse(req.headers.cookie);
+
         const sheet: ISheet = new Sheet({
             _id: new mongoose.Types.ObjectId(),
             sheetURL: req.body.url,
@@ -26,7 +29,7 @@ export const postSheet = async (req: Request, res: Response): Promise<void> => {
             const applicants: Array<Applicant> = await getSheetData(
                 sheet.sheetURL,
                 sheet.sheetName,
-                req.headers.authorization,
+                cookies.accessToken,
             );
 
             const added = await addApplicants(applicants, sheet._id);
@@ -51,6 +54,8 @@ export const postSheet = async (req: Request, res: Response): Promise<void> => {
  */
 export const updateSheet = async (req: Request, res: Response): Promise<void> => {
     try {
+        const cookies = Cookie.parse(req.headers.cookie);
+
         const sheet: ISheet = await Sheet.findOne({ sheetURL: req.body.url, sheetName: req.body.name });
         await Sheet.update(
             { sheetURL: req.body.url, sheetName: req.body.name },
@@ -61,7 +66,7 @@ export const updateSheet = async (req: Request, res: Response): Promise<void> =>
             const applicants: Array<Applicant> = await getSheetData(
                 sheet.sheetURL,
                 sheet.sheetName,
-                req.headers.authorization,
+                cookies.accessToken,
             );
 
             // this makes sure applicants no longer in the sheet being updated are deleted

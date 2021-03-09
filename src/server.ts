@@ -13,7 +13,12 @@ const PORT = process.env.PORT || 4000;
 const server = express();
 
 // Enable Cross Origin Resource Sharing
-server.use(cors());
+server.use(
+    cors({
+        credentials: true,
+        origin: true,
+    }),
+);
 
 // parse application/json
 server.use(bodyParser.json());
