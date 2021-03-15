@@ -28,7 +28,7 @@ describe('ScreeningGrade + InterviewGrade Get', () => {
             major: 'Combined CS + Stat',
             yearStanding: 1,
             level: 'Beginner',
-            status: 'Pending',
+            status: 'Pending Applications',
         });
         const screeningGrade = await ScreeningGrade.create({
             applicant: applicant._id,
@@ -62,7 +62,7 @@ describe('ScreeningGrade + InterviewGrade Get', () => {
             major: 'Combined CS + Stat',
             yearStanding: 1,
             level: 'Beginner',
-            status: 'Pending',
+            status: 'Pending Applications',
         });
         const interviewGrade = await InterviewGrade.create({
             applicant: applicant._id,
