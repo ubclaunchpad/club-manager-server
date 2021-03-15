@@ -45,14 +45,18 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
  */
 export const createCookie = async (req: Request, res: Response): Promise<void> => {
     try {
-        res.setHeader(
-            'Set-Cookie',
+        res.setHeader('Set-Cookie', [
             Cookie.serialize('accessToken', req.headers.authorization, {
                 path: '/',
                 httpOnly: true,
                 maxAge: 60 * 60, // 1 hour
             }),
-        );
+            Cookie.serialize('googleId', <string>req.headers.authorization_id, {
+                path: '/',
+                httpOnly: true,
+                maxAge: 60 * 60 * 24 * 7, // 1 week
+            }),
+        ]);
 
         res.status(200).send('Successfully set the cookie');
     } catch (err) {
