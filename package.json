@@ -7,7 +7,7 @@
         "build": "tsc",
         "lint": "eslint . --ext .ts",
         "test": "jest",
-        "start": "ts-node ./src/server.ts",
+        "start": "node ./dist/server.js",
         "start:watch": "nodemon",
         "start:docker": "tsc && node ./dist/server.js"
     },
