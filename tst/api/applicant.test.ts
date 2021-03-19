@@ -26,7 +26,7 @@ describe('Applicant Get', () => {
             major: 'Combined CS + Stat',
             yearStanding: 1,
             level: 'Beginner',
-            status: 'Pending',
+            status: 'Pending Applications',
         });
 
         await supertest(server)

@@ -55,17 +55,17 @@ const applicantSchema = new Schema({
     status: {
         type: String,
         enum: [
-            'Pending',
-            'Screened',
+            'Pending Applications',
+            'Application Reviewed',
             'Screened: Accepted',
             'Screened: Rejected',
-            'Scheduled for Interview',
+            'Scheduled For Interview',
             'Interviewed',
             'Final Decision: Accepted',
             'Final Decision: Rejected',
             'Archived: Rejected',
         ],
-        default: 'Pending',
+        default: 'Pending Applications',
         required: true,
     },
     linkedIn: {

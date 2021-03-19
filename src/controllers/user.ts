@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { Request, Response } from 'express';
 import User, { IUser } from '../models/user';
+import Cookie from 'cookie';
 
 /**
  * Creates a new user from a firstname, lastname, and Google user id
@@ -57,3 +58,23 @@ export const checkUser = async (req: Request, res: Response): Promise<void> => {
         res.status(200).send({ exists: false });
     }
 }
+
+/*
+ * Creates a cookie for the Google access token upon login/signup
+ */
+export const createCookie = async (req: Request, res: Response): Promise<void> => {
+    try {
+        res.setHeader(
+            'Set-Cookie',
+            Cookie.serialize('accessToken', req.headers.authorization, {
+                path: '/',
+                httpOnly: true,
+                maxAge: 60 * 60, // 1 hour
+            }),
+        );
+
+        res.status(200).send('Successfully set the cookie');
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+};
