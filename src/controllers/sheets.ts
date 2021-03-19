@@ -2,6 +2,7 @@ import { getSheetData } from '../utils/gsuite/sheets';
 import { Applicant } from '../types/applicant';
 import ApplicantModel, { IApplicant } from '../models/applicant';
 import Sheet, { ISheet } from '../models/sheet';
+import User from '../models/user';
 import { Request, Response } from 'express';
 import mongoose, { Schema } from 'mongoose';
 import Cookie from 'cookie';
@@ -13,9 +14,11 @@ import Cookie from 'cookie';
 export const postSheet = async (req: Request, res: Response): Promise<void> => {
     try {
         const cookies = Cookie.parse(req.headers.cookie);
+        const user = await User.findOne({ googleId: cookies.googleId });
 
         const sheet: ISheet = new Sheet({
             _id: new mongoose.Types.ObjectId(),
+            userId: user.googleId,
             sheetURL: req.body.url,
             sheetName: req.body.name,
             email: req.body.email,
@@ -23,7 +26,7 @@ export const postSheet = async (req: Request, res: Response): Promise<void> => {
             dateUpdated: new Date().toISOString().substring(0, 10),
         });
 
-        const exists: boolean = await Sheet.exists({ sheetURL: sheet.sheetURL });
+        const exists: boolean = await Sheet.exists({ sheetURL: sheet.sheetURL, userId: user.googleId });
 
         if (!exists) {
             const applicants: Array<Applicant> = await getSheetData(
@@ -32,7 +35,7 @@ export const postSheet = async (req: Request, res: Response): Promise<void> => {
                 cookies.accessToken,
             );
 
-            const added = await addApplicants(applicants, sheet._id);
+            const added = await addApplicants(applicants, sheet._id, user.googleId);
 
             if (added) {
                 await sheet.save();
@@ -55,10 +58,15 @@ export const postSheet = async (req: Request, res: Response): Promise<void> => {
 export const updateSheet = async (req: Request, res: Response): Promise<void> => {
     try {
         const cookies = Cookie.parse(req.headers.cookie);
+        const user = await User.findOne({ googleId: cookies.googleId });
 
-        const sheet: ISheet = await Sheet.findOne({ sheetURL: req.body.url, sheetName: req.body.name });
-        await Sheet.update(
-            { sheetURL: req.body.url, sheetName: req.body.name },
+        const sheet: ISheet = await Sheet.findOne({
+            sheetURL: req.body.url,
+            sheetName: req.body.name,
+            userId: user.googleId,
+        });
+        await Sheet.updateMany(
+            { sheetURL: req.body.url, sheetName: req.body.name, userId: user.googleId },
             { $set: { dateUpdated: new Date().toISOString().substring(0, 10) } },
         );
 
@@ -70,10 +78,10 @@ export const updateSheet = async (req: Request, res: Response): Promise<void> =>
             );
 
             // this makes sure applicants no longer in the sheet being updated are deleted
-            await ApplicantModel.updateMany({}, { $pullAll: { sheets: [sheet._id] } });
-            await ApplicantModel.deleteMany({ sheets: [] });
+            await ApplicantModel.updateMany({ userId: user.googleId }, { $pullAll: { sheets: [sheet._id] } });
+            await ApplicantModel.deleteMany({ userId: user.googleId, sheets: [] });
 
-            const added = await addApplicants(applicants, sheet._id);
+            const added = await addApplicants(applicants, sheet._id, user.googleId);
 
             if (added) {
                 res.status(200).send('Sheet successfully updated');
@@ -94,12 +102,19 @@ export const updateSheet = async (req: Request, res: Response): Promise<void> =>
  */
 export const deleteSheet = async (req: Request, res: Response): Promise<void> => {
     try {
-        const sheet: ISheet = await Sheet.findOneAndDelete({ sheetURL: req.body.url, sheetName: req.body.name });
+        const cookies = Cookie.parse(req.headers.cookie);
+        const user = await User.findOne({ googleId: cookies.googleId });
+
+        const sheet: ISheet = await Sheet.findOneAndDelete({
+            sheetURL: req.body.url,
+            sheetName: req.body.name,
+            userId: user.googleId,
+        });
         if (sheet == null) {
             res.status(400).send('Sheet does not exist');
         } else {
-            await ApplicantModel.deleteMany({ sheets: [sheet._id] });
-            await ApplicantModel.updateMany({}, { $pullAll: { sheets: [sheet._id] } });
+            await ApplicantModel.deleteMany({ userId: user.googleId, sheets: [sheet._id] });
+            await ApplicantModel.updateMany({ userId: user.googleId }, { $pullAll: { sheets: [sheet._id] } });
             res.status(200).send('Sheet and linked applicants successfully deleted');
         }
     } catch (e) {
@@ -112,7 +127,10 @@ export const deleteSheet = async (req: Request, res: Response): Promise<void> =>
  */
 export const listAllSheets = async (req: Request, res: Response): Promise<void> => {
     try {
-        const sheets = await Sheet.find();
+        const cookies = Cookie.parse(req.headers.cookie);
+        const user = await User.findOne({ googleId: cookies.googleId });
+
+        const sheets = await Sheet.find({ userId: user.googleId });
         res.status(201).send(sheets);
     } catch (error) {
         console.log(error);
@@ -124,11 +142,19 @@ export const listAllSheets = async (req: Request, res: Response): Promise<void> 
  * @description Adds applicants to database if not already there, otherwise updates it from the new sheet
  * @param {Array<Applicant>} applicants - applicants parsed from Google sheet
  * @param {Schema.Types.ObjectId} sheet - ObjectId of the linked sheet
+ * @param {String} googleId - the google id of the user which added the applicant
  */
-const addApplicants = async (applicants: Array<Applicant>, sheet: Schema.Types.ObjectId): Promise<boolean> => {
+const addApplicants = async (
+    applicants: Array<Applicant>,
+    sheet: Schema.Types.ObjectId,
+    googleId: string,
+): Promise<boolean> => {
     for (const applicant of applicants) {
         try {
-            const iApplicant: IApplicant = await ApplicantModel.findOneAndDelete({ email: applicant.email });
+            const iApplicant: IApplicant = await ApplicantModel.findOneAndDelete({
+                email: applicant.email,
+                userId: googleId,
+            });
             let new_sheets: Array<Schema.Types.ObjectId> = [];
 
             if (iApplicant != null) {
@@ -140,6 +166,7 @@ const addApplicants = async (applicants: Array<Applicant>, sheet: Schema.Types.O
 
             const newApplicant: IApplicant = new ApplicantModel({
                 _id: new mongoose.Types.ObjectId(),
+                userId: googleId,
                 firstName: applicant.firstName,
                 lastName: applicant.lastName,
                 email: applicant.email,
@@ -147,7 +174,7 @@ const addApplicants = async (applicants: Array<Applicant>, sheet: Schema.Types.O
                 major: applicant.major,
                 yearStanding: applicant.year,
                 level: 'Beginner',
-                status: 'Pending',
+                status: 'Pending Applications',
                 linkedIn: applicant.linkedin,
                 website: applicant.website,
                 resume: applicant.resume,

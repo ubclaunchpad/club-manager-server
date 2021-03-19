@@ -21,6 +21,7 @@ describe('ScreeningGrade + InterviewGrade Get', () => {
 
     test('GET /grade/screening/:applicantId', async () => {
         const applicant = await Applicant.create({
+            userId: '101',
             firstName: 'John',
             lastName: 'Doe',
             email: 'johndoe@gmail.com',
@@ -55,6 +56,7 @@ describe('ScreeningGrade + InterviewGrade Get', () => {
 
     test('GET /grade/interview/:applicantId', async () => {
         const applicant = await Applicant.create({
+            userId: '101',
             firstName: 'John',
             lastName: 'Doe',
             email: 'johndoe@gmail.com',

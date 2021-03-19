@@ -1,9 +1,13 @@
 import mongoose from 'mongoose';
 import { Request, Response } from 'express';
 import Applicant, { IApplicant } from '../models/applicant';
+import Cookie from 'cookie';
 
 export const createApplicant = async (req: Request, res: Response): Promise<void> => {
+    const cookies = Cookie.parse(req.headers.cookie);
+
     const newApplicant: IApplicant = new Applicant({
+        userId: cookies.googleId,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
@@ -27,11 +31,11 @@ export const createApplicant = async (req: Request, res: Response): Promise<void
 
 export const updateApplicantFields = async (req: Request, res: Response): Promise<void> => {
     const valid_status = [
-        'Pending',
-        'Screened',
+        'Pending Applications',
+        'Application Reviewed',
         'Screened: Accepted',
         'Screened: Rejected',
-        'Scheduled for Interview',
+        'Scheduled For Interview',
         'Interviewed',
         'Final Decision: Accepted',
         'Final Decision: Rejected',
@@ -92,7 +96,9 @@ export const updateApplicantFields = async (req: Request, res: Response): Promis
 
 export const listAllApplicants = async (req: Request, res: Response): Promise<void> => {
     try {
-        const applicants = await Applicant.find();
+        const cookies = Cookie.parse(req.headers.cookie);
+
+        const applicants = await Applicant.find({ userId: cookies.googleId });
         res.status(201).send(applicants);
     } catch (error) {
         console.log(error);
