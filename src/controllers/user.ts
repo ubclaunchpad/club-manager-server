@@ -53,11 +53,10 @@ export const checkUser = async (req: Request, res: Response): Promise<void> => {
 
     if (usersMatchingId.length > 0) {
         res.status(200).send({ exists: true });
-    }
-    else {
+    } else {
         res.status(200).send({ exists: false });
     }
-}
+};
 
 /*
  * Creates a cookie for the Google access token upon login/signup
