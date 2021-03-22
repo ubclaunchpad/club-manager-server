@@ -1,5 +1,9 @@
 # private keys for google api
 keys.json
+
+# environment variables
+config/*.env
+
 # Logs
 logs
 *.log
