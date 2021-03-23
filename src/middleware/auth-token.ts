@@ -1,17 +1,17 @@
+import { Request, Response, NextFunction } from 'express';
 import { googleAuth } from './google-auth';
 
 // Function called by middleware to verify that the google token is valid
-export const verifyToken = async (req, res, next) => {
+export const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
     const bearerHeader = req.headers['authorization'];
 
     if (bearerHeader) {
         // Isolate the token from the header
         const bearer = bearerHeader.split(' ');
         const bearerToken = bearer[1];
-        req.token = bearerToken;
 
         // Verify the token
-        const credentials = await googleAuth(req.token);
+        const credentials = await googleAuth(bearerToken);
         if (credentials) {
             // Store credentials
             res.locals.userId = credentials.userId;

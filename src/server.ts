@@ -1,3 +1,4 @@
+import * as dotenv from 'dotenv';
 import express from 'express';
 import * as bodyParser from 'body-parser';
 import cors from 'cors';
@@ -8,6 +9,8 @@ import applicantRouter from './routes/applicant';
 import userRouter from './routes/user';
 import sheetsRouter from './routes/sheets';
 import gradeRouter from './routes/grade';
+
+dotenv.config();
 
 const PORT = process.env.PORT || 4000;
 const server = express();

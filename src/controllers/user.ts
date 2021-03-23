@@ -13,9 +13,11 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
         const firstName = res.locals.firstname;
         const lastName = res.locals.lastname;
         const email = res.locals.email;
+        const organization = req.body.organization;
+        const schoolName = req.body.schoolName;
 
         // Verify that all fields are present
-        if (firstName && lastName && googleId) {
+        if (firstName && lastName && googleId && email && organization && schoolName) {
             // Verify that the user doesn't exist already
             const usersMatchingId = await User.find({ googleId: googleId }).catch(() => []);
 
@@ -28,6 +30,8 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
                     firstName,
                     lastName,
                     email,
+                    organization,
+                    schoolName,
                 });
                 await newUser.save();
                 res.status(201).send(`New user "${firstName} ${lastName}" created.`);
@@ -37,6 +41,20 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
         }
     } catch (e) {
         res.status(500).send(e.message);
+    }
+};
+
+/*
+ * Checks if the user corresponding to the auth token is an existing user
+ */
+export const checkUser = async (req: Request, res: Response): Promise<void> => {
+    const googleId = res.locals.userId;
+    const usersMatchingId = await User.find({ googleId: googleId }).catch(() => []);
+
+    if (usersMatchingId.length > 0) {
+        res.status(200).send({ exists: true });
+    } else {
+        res.status(200).send({ exists: false });
     }
 };
 
