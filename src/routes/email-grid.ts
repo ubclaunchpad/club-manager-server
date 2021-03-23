@@ -2,12 +2,12 @@ import { Request, Response, Router } from 'express';
 import { Mail } from '../types/mail';
 import { sendEmail } from '../utils/mail/sendgrid';
 
-export const emailGridRouter = Router();
+const emailGridRouter = Router();
 
 /**
  * @description POST request to send an email from an authorized Gmail account
  */
-emailGridRouter.post('/send-grid', async (req: Request, res: Response) => {
+emailGridRouter.post('/', async (req: Request, res: Response) => {
     try {
         const mailMessage: Mail = {
             from: req.body.from,
@@ -24,3 +24,5 @@ emailGridRouter.post('/send-grid', async (req: Request, res: Response) => {
         res.status(404).send(e.message);
     }
 });
+
+export default emailGridRouter;
