@@ -17,7 +17,7 @@ export const emailGridRouter = Router();
         }
         const recipient = req.body.recipient;
         const resp = await sendEmail(recipient, mailMessage);
-        if (resp.status === 200) {
+        if (resp[0].statusCode === 202) {
             res.send('Mail sent successfully!');
         }
     } catch (e) {

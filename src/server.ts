@@ -11,8 +11,6 @@ import userRouter from './routes/user';
 import sheetsRouter from './routes/sheets';
 import gradeRouter from './routes/grade';
 
-import { sendEmail } from './utils/mail/sendgrid';
-
 dotenv.config();
 
 const PORT = process.env.PORT || 4000;
@@ -33,13 +31,6 @@ server.use(bodyParser.urlencoded({ extended: true }));
 server.use('/api/auth', authRouter);
 server.use('/api/email', emailGridRouter);
 server.use('/api/email', ensureAuthenticated(), emailRouter);
-
-sendEmail('nancywan1004@gmail.com', {
-    from: 'ubc.launchpad.clubmanager@gmail.com',
-    subject: 'Sending with SendGrid is Fun',
-    text: 'and easy!',
-    html: '<h1>and easy!</h1>',
-});
 
 // Establish DB connection
 require('./database/mongodb');
