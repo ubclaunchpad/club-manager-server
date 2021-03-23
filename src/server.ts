@@ -2,9 +2,7 @@ import * as dotenv from 'dotenv';
 import express from 'express';
 import * as bodyParser from 'body-parser';
 import cors from 'cors';
-import { emailRouter } from './routes/email';
-import { authRouter } from './routes/auth';
-import { ensureAuthenticated } from './utils/auth/auth-utils';
+import emailGridRouter from './routes/email-grid';
 import applicantRouter from './routes/applicant';
 import userRouter from './routes/user';
 import sheetsRouter from './routes/sheets';
@@ -27,13 +25,12 @@ server.use(
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
 
-server.use('/api/auth', authRouter);
-server.use('/api/email', ensureAuthenticated(), emailRouter);
 // Establish DB connection
 require('./database/mongodb');
 
 server.use(express.json());
 server.use('/applicant', applicantRouter);
+server.use('/email', emailGridRouter);
 server.use('/sheets', sheetsRouter);
 server.use('/grade', gradeRouter);
 server.use('/user', userRouter);
