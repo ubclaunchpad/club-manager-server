@@ -14,18 +14,20 @@ export const sendEmail = async (recipient: string, action: string): Promise<any>
     return new Promise((resolve, reject) => {
         let mailMessage: Mail;
         switch (action) {
-            case 'Schedule':
+            case 'Email-Schedule':
                 mailMessage = new ScreeningAcceptanceMail();
                 break;
-            case 'Reject-Screen':
+            case 'Email-Reject-Screen':
                 mailMessage = new ScreeningRejectionMail();
                 break;
-            case 'Accpet-Final':
+            case 'Email-Accept':
                 mailMessage = new FinalAcceptanceMail();
                 break;
-            case 'Reject-Final':
+            case 'Email-Reject-Final':
                 mailMessage = new FinalRejectionMail();
                 break;
+            default:
+                return;
         }
         const mailWithSender: any = { to: recipient, ...mailMessage };
         sgMail
