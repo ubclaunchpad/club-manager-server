@@ -1,9 +1,9 @@
 import sgMail from '@sendgrid/mail';
-import Mail from '../../models/mails/mail';
-import FinalAcceptanceMail from '../../models/mails/finalAcceptanceMail';
-import FinalRejectionMail from '../../models/mails/finalRejectionMail';
-import ScreeningAcceptanceMail from '../../models/mails/screeningAcceptanceMail';
-import ScreeningRejectionMail from '../../models/mails/screeningRejectionMail';
+import Mail from '../../resources/mail/mail';
+import FinalAcceptanceMail from '../../resources/mail/final-acceptance-mail';
+import FinalRejectionMail from '../../resources/mail/final-rejection-mail';
+import ScreeningAcceptanceMail from '../../resources/mail/screening-acceptance-mail';
+import ScreeningRejectionMail from '../../resources/mail/screening-rejection-mail';
 
 /** @description Send an email through the SendGrid API
  *  @param { string } recipients - recipients of the desired email
