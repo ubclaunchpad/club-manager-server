@@ -16,17 +16,17 @@ emailGridRouter.post('/', async (req: Request, res: Response) => {
         const recipient = req.body.recipient;
         const action = req.body.action;
         let mailMessage: Mail;
-        switch(action) {
-            case "Schedule":
+        switch (action) {
+            case 'Schedule':
                 mailMessage = new ScreeningAcceptanceMail();
                 break;
-            case "Reject-Screen":
+            case 'Reject-Screen':
                 mailMessage = new ScreeningRejectionMail();
                 break;
-            case "Accpet-Final":
+            case 'Accpet-Final':
                 mailMessage = new FinalAcceptanceMail();
                 break;
-            case "Reject-Final":
+            case 'Reject-Final':
                 mailMessage = new FinalRejectionMail();
                 break;
         }

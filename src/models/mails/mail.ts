@@ -1,8 +1,8 @@
 export interface IMail {
-    from: string,
-    subject: string,
-    text: string,
-    html: string    
+    from: string;
+    subject: string;
+    text: string;
+    html: string;
 }
 
 export default class Mail {
