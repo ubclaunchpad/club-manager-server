@@ -2,8 +2,8 @@ import { Request, Response, Router } from 'express';
 import FinalAcceptanceMail from '../models/mails/finalAcceptanceMail';
 import FinalRejectionMail from '../models/mails/finalRejectionMail';
 import Mail from '../models/mails/mail';
-import ScreeningAcceptanceMail from '../models/mails/ScreeningAcceptanceMail';
-import ScreeningRejectionMail from '../models/mails/ScreeningRejectionMail';
+import ScreeningAcceptanceMail from '../models/mails/screeningAcceptanceMail';
+import ScreeningRejectionMail from '../models/mails/screeningRejectionMail';
 import { sendEmail } from '../utils/mail/sendgrid';
 
 const emailGridRouter = Router();
