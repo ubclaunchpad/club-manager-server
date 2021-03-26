@@ -1,5 +1,5 @@
 import sgMail from '@sendgrid/mail';
-import { Mail } from '../../types/mail';
+import Mail from '../../models/mails/mail';
 
 /** @description Send an email through the SendGrid API
  *  @param { string } recipients - recipients of the desired email
@@ -8,7 +8,7 @@ import { Mail } from '../../types/mail';
 export const sendEmail = async (recipient: string, mail: Mail): Promise<any> => {
     sgMail.setApiKey(process.env.APIKEY_SENDGRID);
     return new Promise((resolve, reject) => {
-        const mailWithSender = { to: recipient, ...mail };
+        const mailWithSender: any = { to: recipient, ...mail };
         sgMail
             .send(mailWithSender)
             .then((resp) => {

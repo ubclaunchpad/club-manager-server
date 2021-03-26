@@ -1,5 +1,9 @@
 import { Request, Response, Router } from 'express';
-import { Mail } from '../types/mail';
+import FinalAcceptanceMail from '../models/mails/finalAcceptanceMail';
+import FinalRejectionMail from '../models/mails/finalRejectionMail';
+import Mail from '../models/mails/mail';
+import ScreeningAcceptanceMail from '../models/mails/ScreeningAcceptanceMail';
+import ScreeningRejectionMail from '../models/mails/ScreeningRejectionMail';
 import { sendEmail } from '../utils/mail/sendgrid';
 
 const emailGridRouter = Router();
@@ -9,13 +13,23 @@ const emailGridRouter = Router();
  */
 emailGridRouter.post('/', async (req: Request, res: Response) => {
     try {
-        const mailMessage: Mail = {
-            from: req.body.from,
-            subject: req.body.subject,
-            text: req.body.text,
-            html: req.body.html,
-        };
         const recipient = req.body.recipient;
+        const action = req.body.action;
+        let mailMessage: Mail;
+        switch(action) {
+            case "Schedule":
+                mailMessage = new ScreeningAcceptanceMail();
+                break;
+            case "Reject-Screen":
+                mailMessage = new ScreeningRejectionMail();
+                break;
+            case "Accpet-Final":
+                mailMessage = new FinalAcceptanceMail();
+                break;
+            case "Reject-Final":
+                mailMessage = new FinalRejectionMail();
+                break;
+        }
         const resp = await sendEmail(recipient, mailMessage);
         if (resp[0].statusCode === 202) {
             res.send('Mail sent successfully!');
