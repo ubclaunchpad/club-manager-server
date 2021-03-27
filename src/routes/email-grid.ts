@@ -1,5 +1,4 @@
 import { Request, Response, Router } from 'express';
-import { Mail } from '../types/mail';
 import { sendEmail } from '../utils/mail/sendgrid';
 
 const emailGridRouter = Router();
@@ -9,14 +8,9 @@ const emailGridRouter = Router();
  */
 emailGridRouter.post('/', async (req: Request, res: Response) => {
     try {
-        const mailMessage: Mail = {
-            from: req.body.from,
-            subject: req.body.subject,
-            text: req.body.text,
-            html: req.body.html,
-        };
         const recipient = req.body.recipient;
-        const resp = await sendEmail(recipient, mailMessage);
+        const action = req.body.action;
+        const resp = await sendEmail(recipient, action);
         if (resp[0].statusCode === 202) {
             res.send('Mail sent successfully!');
         }

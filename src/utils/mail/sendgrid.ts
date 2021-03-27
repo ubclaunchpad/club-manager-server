@@ -1,14 +1,35 @@
 import sgMail from '@sendgrid/mail';
-import { Mail } from '../../types/mail';
+import Mail from '../../resources/mail/mail';
+import FinalAcceptanceMail from '../../resources/mail/final-acceptance-mail';
+import FinalRejectionMail from '../../resources/mail/final-rejection-mail';
+import ScreeningAcceptanceMail from '../../resources/mail/screening-acceptance-mail';
+import ScreeningRejectionMail from '../../resources/mail/screening-rejection-mail';
 
 /** @description Send an email through the SendGrid API
  *  @param { string } recipients - recipients of the desired email
  *  @param { Mail } mail - the email message to be sent
  */
-export const sendEmail = async (recipient: string, mail: Mail): Promise<any> => {
+export const sendEmail = async (recipient: string, action: string): Promise<any> => {
     sgMail.setApiKey(process.env.APIKEY_SENDGRID);
     return new Promise((resolve, reject) => {
-        const mailWithSender = { to: recipient, ...mail };
+        let mailMessage: Mail;
+        switch (action) {
+            case 'Email-Schedule':
+                mailMessage = new ScreeningAcceptanceMail();
+                break;
+            case 'Email-Reject-Screen':
+                mailMessage = new ScreeningRejectionMail();
+                break;
+            case 'Email-Accept':
+                mailMessage = new FinalAcceptanceMail();
+                break;
+            case 'Email-Reject-Final':
+                mailMessage = new FinalRejectionMail();
+                break;
+            default:
+                return;
+        }
+        const mailWithSender: any = { to: recipient, ...mailMessage };
         sgMail
             .send(mailWithSender)
             .then((resp) => {
