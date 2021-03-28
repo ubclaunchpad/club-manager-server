@@ -69,6 +69,7 @@ const applicantSchema = new Schema({
             'Interviewed',
             'Final Decision: Accepted',
             'Final Decision: Rejected',
+            'Archived: Accepted',
             'Archived: Rejected',
         ],
         default: 'Pending Applications',
