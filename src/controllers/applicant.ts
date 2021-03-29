@@ -39,6 +39,7 @@ export const updateApplicantFields = async (req: Request, res: Response): Promis
         'Interviewed',
         'Final Decision: Accepted',
         'Final Decision: Rejected',
+        'Archived: Accepted',
         'Archived: Rejected',
     ];
 
