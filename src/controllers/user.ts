@@ -59,7 +59,7 @@ export const checkUser = async (req: Request, res: Response): Promise<void> => {
 };
 
 /*
- * Creates a cookie for the Google access token upon login/signup
+ * Creates cookies for the Google access token and user id upon login
  */
 export const createCookie = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -76,7 +76,21 @@ export const createCookie = async (req: Request, res: Response): Promise<void> =
             }),
         ]);
 
-        res.status(200).send('Successfully set the cookie');
+        res.status(200).send('Successfully set the cookies');
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+};
+
+/*
+ * Deletes cookies upon logout
+ */
+export const deleteCookie = async (req: Request, res: Response): Promise<void> => {
+    try {
+        res.clearCookie('accessToken');
+        res.clearCookie('googleId');
+
+        res.status(200).send('Successfully deleted the cookies');
     } catch (err) {
         res.status(500).send(err.message);
     }
