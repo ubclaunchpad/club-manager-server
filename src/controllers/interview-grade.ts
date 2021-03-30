@@ -1,55 +1,60 @@
 import { Request, Response } from 'express';
+import mongoose from 'mongoose';
 import Applicant from '../models/applicant';
 import InterviewGrade, { IInterviewGrade } from '../models/interview-grade';
 
 export const createInterviewGrade = async (req: Request<any>, res: Response): Promise<void> => {
+    const allowedLevel = ['Beginner', 'Independent', 'Experienced'];
+
+    if (req.body.level == null || !allowedLevel.includes(req.body.level)) {
+        res.status(400).send(
+            'Request could not be processed, body must include "level", [Beginner, Independent, Experienced]',
+        );
+        return;
+    }
+
     try {
-        const applicant = await Applicant.findOne({ _id: req.params.applicantId });
+        const applicant = await Applicant.findById(req.params.applicantId);
+
+        // If a Interview Grade already exists, then we delte it to ensure that there is only one
+        await InterviewGrade.findOneAndDelete({
+            applicant: mongoose.Types.ObjectId(req.params.applicantId),
+        });
+
         const newInterviewGrade: IInterviewGrade = new InterviewGrade({
+            // TODO refactor to just deconstruct the req.body object onto the newInterviewGrade object
             applicant: applicant._id,
-            applicantName: applicant.firstName + ' ' + applicant.lastName,
-            experienceLevel: req.body.experienceLevel,
             interviewer1: req.body.interviewer1,
             interviewer2: req.body.interviewer2,
-            date: new Date(req.body.date).toLocaleDateString('en-US'),
             intro: req.body.intro,
-            experience: req.body.experience,
-            depth: req.body.depth,
-            whiteboard: req.body.whiteboard,
-            conclusion: req.body.conclusion,
+            experienceTechnical: req.body.experienceTechnical,
+            experienceTeamwork: req.body.experienceTeamwork,
+            depthTopic: req.body.depthTopic,
+            depthScore: req.body.depthScore,
+            whiteboardQuestion: req.body.whiteboardQuestion,
+            whiteboardScore: req.body.whiteboardScore,
+            whiteboardComments: req.body.whiteboardComments,
+            conclusionTimeCommitment: req.body.conclusionTimeCommitment,
+            conclusionQuestions: req.body.conclusionQuestions,
             debrief: req.body.debrief,
         });
+
+        newInterviewGrade.total =
+            newInterviewGrade.experienceTechnical +
+            newInterviewGrade.experienceTeamwork +
+            newInterviewGrade.depthScore +
+            newInterviewGrade.whiteboardScore +
+            newInterviewGrade.debrief;
+
+        applicant.level = req.body.level;
+        applicant.interviewGrade = newInterviewGrade._id;
+
         await newInterviewGrade.save();
+        await applicant.save();
+
         res.status(201).send(newInterviewGrade);
     } catch (error) {
-        res.status(500).send(error);
-    }
-};
-
-export const updateInterviewNumericalGrade = async (req: Request<any>, res: Response): Promise<void> => {
-    try {
-        const interviewGrade = await InterviewGrade.findOne({ applicant: req.params.applicantId });
-        if (interviewGrade == null) {
-            res.status(400).send('No interview grade is found to match that id');
-        }
-        interviewGrade.experience.technical =
-            !req.body.experience || req.body.experience.technical == undefined
-                ? interviewGrade.experience.technical
-                : req.body.experience.technical;
-        interviewGrade.experience.teamwork =
-            !req.body.experience || req.body.experience.teamwork == undefined
-                ? interviewGrade.experience.teamwork
-                : req.body.experience.teamwork;
-        interviewGrade.depth.score =
-            !req.body.depth || req.body.depth.score == undefined ? interviewGrade.depth.score : req.body.depth.score;
-        interviewGrade.whiteboard.score =
-            !req.body.whiteboard || req.body.whiteboard.score == undefined
-                ? interviewGrade.whiteboard.score
-                : req.body.whiteboard.score;
-        interviewGrade.debrief = req.body.debrief == undefined ? interviewGrade.debrief : req.body.debrief;
-        await interviewGrade.save();
-        res.status(201).send(interviewGrade);
-    } catch (error) {
+        console.log(`Error: ${error}`);
         res.status(500).send(error);
     }
 };

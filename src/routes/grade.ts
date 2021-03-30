@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { createInterviewGrade, getInterviewGrade, updateInterviewNumericalGrade } from '../controllers/interview-grade';
+import { createInterviewGrade, getInterviewGrade } from '../controllers/interview-grade';
 import { createScreeningGrade, getScreeningGrade, updateScreeningNumericalGrade } from '../controllers/screening-grade';
 
 const router = express.Router();
@@ -18,8 +18,4 @@ router.post('/interview/:applicantId/', createInterviewGrade);
 
 /* Sets the interview numerical grades of the applicant matching the applicantId in the query param */
 router.patch('/screening/:applicantId/', updateScreeningNumericalGrade);
-
-/* Sets the interview numerical grades of the applicant matching the applicantId in the query param */
-router.patch('/interview/:applicantId/', updateInterviewNumericalGrade);
-
 export default router;
