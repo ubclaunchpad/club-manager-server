@@ -1,50 +1,30 @@
 import mongoose from 'mongoose';
+import { IApplicant } from './applicant';
 import { Document, Model, Schema } from 'mongoose';
 
 export interface IInterviewGrade extends Document {
-    applicant: { type: Schema.Types.ObjectId; ref: 'Applicant' };
-    applicantName: string;
-    experienceLevel: string;
+    applicant: IApplicant['_id'];
     interviewer1: string;
     interviewer2?: string;
-    date: Date;
-    intro?: string;
-    experience: {
-        technical: number;
-        teamwork: number;
-        comments?: string;
-    };
-    depth: {
-        topic: string;
-        score: number;
-        comments?: string;
-    };
-    whiteboard: {
-        question: string;
-        score: number;
-        comments?: string;
-    };
-    conclusion: {
-        commitment: string;
-        questions?: string;
-    };
-    debrief: number; // the level from 1-3 you rate as how much you would want to work with this person
+    intro: string;
+    experienceTechnical: number;
+    experienceTeamwork: number;
+    experienceComments: string;
+    depthTopic: string;
+    depthScore: number;
+    whiteboardQuestion: string;
+    whiteboardScore: number;
+    whiteboardComments: string;
+    conclusionTimeCommitment: string;
+    conclusionQuestions: string;
+    debrief: number;
+    total: number;
 }
 
 const gradeSchema = new Schema({
     applicant: {
         type: Schema.Types.ObjectId,
         ref: 'Applicant',
-        required: true,
-    },
-    applicantName: {
-        type: String,
-        required: true,
-    },
-    experienceLevel: {
-        type: String,
-        enum: ['Beginner', 'Independent', 'Experienced'],
-        default: 'Beginner',
         required: true,
     },
     interviewer1: {
@@ -55,82 +35,66 @@ const gradeSchema = new Schema({
         type: String,
         required: false,
     },
-    date: {
-        type: Date,
-        required: true,
-    },
     intro: {
         type: String,
         required: false,
     },
-    experience: {
-        technical: {
-            type: Number,
-            enum: [0, 1, 2],
-            default: 0,
-            required: true,
-        },
-        teamwork: {
-            type: Number,
-            enum: [0, 1, 2],
-            default: 0,
-            required: true,
-        },
-        comments: {
-            type: String,
-            required: false,
-        },
+    experienceTechnical: {
+        type: Number,
+        enum: [0, 1, 2],
+        default: 0,
+        required: true,
     },
-    depth: {
-        topic: {
-            type: String,
-            enum: ['Client/Server', 'Mobile', 'Others'],
-            default: 'Client/Server',
-            required: true,
-        },
-        score: {
-            type: Number,
-            enum: [0, 1, 2],
-            default: 0,
-            required: true,
-        },
-        comments: {
-            type: String,
-            required: false,
-        },
+    experienceTeamwork: {
+        type: Number,
+        enum: [0, 1, 2, 3, 4],
+        default: 0,
+        required: true,
     },
-    whiteboard: {
-        question: {
-            type: String,
-            required: true,
-        },
-        score: {
-            type: Number,
-            enum: [0, 1, 2],
-            default: 0,
-            required: true,
-        },
-        comments: {
-            type: String,
-            required: false,
-        },
+    depthTopic: {
+        type: String,
+        enum: ['Client/Server', 'Mobile', 'Others'],
+        default: 'Client/Server',
+        required: true,
     },
-    conclusion: {
-        commitment: {
-            type: String,
-            enum: ['Yes', 'No', 'Non-committal'],
-            default: 'Yes',
-            required: true,
-        },
-        questions: {
-            type: String,
-            required: false,
-        },
+    depthScore: {
+        type: Number,
+        enum: [0, 1, 2, 3, 4],
+        default: 0,
+        required: true,
+    },
+    whiteboardQuestion: {
+        type: String,
+        required: true,
+    },
+    whiteboardScore: {
+        type: Number,
+        enum: [0, 1, 2, 3, 4],
+        default: 0,
+        required: true,
+    },
+    whiteboardComments: {
+        type: String,
+        required: true,
+    },
+    conclusionTimeCommitment: {
+        type: String,
+        enum: ['Yes', 'No', 'Non-committal'],
+        default: 'Yes',
+        required: true,
+    },
+    conclusionQuestions: {
+        type: String,
+        required: true,
     },
     debrief: {
         type: Number,
         enum: [1, 2, 3],
         default: 1,
+        required: true,
+    },
+    total: {
+        type: Number,
         required: true,
     },
 });
