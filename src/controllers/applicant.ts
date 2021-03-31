@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { Request, Response } from 'express';
 import Applicant, { IApplicant } from '../models/applicant';
+import ScreeningGrade from '../models/screening-grade';
 import Cookie from 'cookie';
 
 export const createApplicant = async (req: Request, res: Response): Promise<void> => {
@@ -100,7 +101,21 @@ export const listAllApplicants = async (req: Request, res: Response): Promise<vo
         const cookies = Cookie.parse(req.headers.cookie);
 
         const applicants = await Applicant.find({ userId: cookies.googleId });
-        res.status(201).send(applicants);
+        const applicantResponseList = [];
+
+        for (const applicant of applicants) {
+            const screeningGrade = await ScreeningGrade.findById(applicant.screeningGrade);
+            const applicantResponseListObject = {};
+
+            for (const property in applicant['_doc'])
+                applicantResponseListObject[property] = applicant['_doc'][property];
+
+            applicantResponseListObject['screeningGradeActual'] = screeningGrade;
+
+            applicantResponseList.push(applicantResponseListObject);
+        }
+
+        res.status(201).send(applicantResponseList);
     } catch (error) {
         console.log(error);
         res.status(500).send(error);

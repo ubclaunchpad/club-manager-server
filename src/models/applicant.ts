@@ -55,8 +55,8 @@ const applicantSchema = new Schema({
     },
     level: {
         type: String,
-        enum: ['Beginner', 'Intermediate', 'Advanced'],
-        required: true,
+        enum: ['Beginner', 'Independent', 'Experienced'],
+        required: false,
     },
     status: {
         type: String,
