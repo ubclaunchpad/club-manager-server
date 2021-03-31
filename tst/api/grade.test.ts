@@ -28,7 +28,6 @@ describe('ScreeningGrade + InterviewGrade Get', () => {
             role: 'Developer',
             major: 'Combined CS + Stat',
             yearStanding: 1,
-            level: 'Beginner',
             status: 'Pending Applications',
         });
         const screeningGrade = await ScreeningGrade.create({
@@ -36,10 +35,7 @@ describe('ScreeningGrade + InterviewGrade Get', () => {
             c1: 1,
             c2: 1,
             c3: 1,
-            c4: 1,
-            c5: 1,
-            c6: 1,
-            total: 6,
+            total: 3,
         });
         const applicantId = screeningGrade.applicant.toString();
 
@@ -51,6 +47,35 @@ describe('ScreeningGrade + InterviewGrade Get', () => {
                 expect(response.body._id).toBe(screeningGrade._id.toString());
                 expect(response.body.applicant).toBe(screeningGrade.applicant.toString());
                 expect(response.body.total).toBe(screeningGrade.total);
+            });
+    });
+
+    test('POST /grade/screening/:applicantId', async () => {
+        const applicant = await Applicant.create({
+            userId: '101',
+            firstName: 'John',
+            lastName: 'Doe',
+            email: 'johndoe@gmail.com',
+            role: 'Developer',
+            major: 'Combined CS + Stat',
+            yearStanding: 1,
+            status: 'Pending Applications',
+        });
+
+        const screenBody = {
+            c1: 0,
+            c2: 1,
+            c3: 2,
+            level: 'Independent',
+        };
+
+        await supertest(server)
+            .post(`/grade/screening/${applicant._id}`)
+            .send(screenBody)
+            .expect(201)
+            .then((response) => {
+                expect(response.body.applicant).toBe(applicant._id.toString());
+                expect(response.body.total).toBe(3);
             });
     });
 
