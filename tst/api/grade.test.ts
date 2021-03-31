@@ -68,26 +68,21 @@ describe('ScreeningGrade + InterviewGrade Get', () => {
         });
         const interviewGrade = await InterviewGrade.create({
             applicant: applicant._id,
-            applicantName: applicant.firstName + ' ' + applicant.lastName,
-            experienceLevel: 'Independent',
-            interviewer1: 'John',
-            date: '9/12/2020',
-            experience: {
-                technical: 2,
-                teamwork: 2,
-            },
-            depth: {
-                topic: 'Client/Server',
-                score: 2,
-            },
-            whiteboard: {
-                question: 'Two Sum',
-                score: 2,
-            },
-            conclusion: {
-                commitment: 'Yes',
-            },
+            level: 'Independent',
+            interviewer1: 'Connor',
+            interviewer2: 'Connor',
+            intro: 'This is a test',
+            experienceTechnical: 1,
+            experienceTeamwork: 1,
+            depthTopic: 'Client/Server',
+            depthScore: 1,
+            whiteboardQuestion: 'Two Sum',
+            whiteboardScore: 2,
+            whiteboardComments: 'I have none',
+            conclusionTimeCommitment: 'Yes',
+            conclusionQuestions: 'Yes',
             debrief: 2,
+            total: 7,
         });
         const applicantId = interviewGrade.applicant.toString();
 
@@ -98,7 +93,6 @@ describe('ScreeningGrade + InterviewGrade Get', () => {
                 // Check data
                 expect(response.body._id).toBe(interviewGrade._id.toString());
                 expect(response.body.applicant).toBe(interviewGrade.applicant.toString());
-                expect(response.body.applicantName).toBe(interviewGrade.applicantName);
             });
     });
 });
