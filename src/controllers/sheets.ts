@@ -152,7 +152,7 @@ const addApplicants = async (
 ): Promise<boolean> => {
     for (const applicant of applicants) {
         try {
-            const iApplicant: IApplicant = await ApplicantModel.findOneAndDelete({
+            const oldApplicant: IApplicant = await ApplicantModel.findOneAndDelete({
                 email: applicant.email,
                 userId: googleId,
             });
@@ -162,12 +162,12 @@ const addApplicants = async (
             let screeningGrade = undefined;
             let interviewGrade = undefined;
 
-            if (iApplicant != null) {
-                new_sheets = iApplicant.sheets;
-                level = iApplicant.level;
-                status = iApplicant.status;
-                screeningGrade = iApplicant.screeningGrade;
-                interviewGrade = iApplicant.interviewGrade;
+            if (oldApplicant != null) {
+                new_sheets = oldApplicant.sheets;
+                level = oldApplicant.level;
+                status = oldApplicant.status;
+                screeningGrade = oldApplicant.screeningGrade;
+                interviewGrade = oldApplicant.interviewGrade;
             }
             if (!new_sheets.includes(sheet)) {
                 new_sheets.push(sheet);
