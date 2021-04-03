@@ -79,9 +79,10 @@ export const updateSheet = async (req: Request, res: Response): Promise<void> =>
 
             // this makes sure applicants no longer in the sheet being updated are deleted
             await ApplicantModel.updateMany({ userId: user.googleId }, { $pullAll: { sheets: [sheet._id] } });
-            await ApplicantModel.deleteMany({ userId: user.googleId, sheets: [] });
 
             const added = await addApplicants(applicants, sheet._id, user.googleId);
+
+            await ApplicantModel.deleteMany({ userId: user.googleId, sheets: [] });
 
             if (added) {
                 res.status(200).send('Sheet successfully updated');
@@ -156,9 +157,17 @@ const addApplicants = async (
                 userId: googleId,
             });
             let new_sheets: Array<Schema.Types.ObjectId> = [];
+            let level = 'Beginner';
+            let status = 'Pending Applications';
+            let screeningGrade = undefined;
+            let interviewGrade = undefined;
 
             if (iApplicant != null) {
                 new_sheets = iApplicant.sheets;
+                level = iApplicant.level;
+                status = iApplicant.status;
+                screeningGrade = iApplicant.screeningGrade;
+                interviewGrade = iApplicant.interviewGrade;
             }
             if (!new_sheets.includes(sheet)) {
                 new_sheets.push(sheet);
@@ -173,12 +182,14 @@ const addApplicants = async (
                 role: applicant.role,
                 major: applicant.major,
                 yearStanding: applicant.year,
-                level: 'Beginner',
-                status: 'Pending Applications',
+                level: level,
+                status: status,
                 linkedIn: applicant.linkedin,
                 website: applicant.website,
                 resume: applicant.resume,
                 sheets: new_sheets,
+                screeningGrade: screeningGrade,
+                interviewGrade: interviewGrade,
             });
 
             await newApplicant.save();
