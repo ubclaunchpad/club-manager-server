@@ -12,6 +12,7 @@ export interface IInterviewGrade extends Document {
     experienceComments: string;
     depthTopic: string;
     depthScore: number;
+    depthComments: string;
     whiteboardQuestion: string;
     whiteboardScore: number;
     whiteboardComments: string;
@@ -51,6 +52,10 @@ const gradeSchema = new Schema({
         default: 0,
         required: true,
     },
+    experienceComments: {
+        type: String,
+        required: false,
+    },
     depthTopic: {
         type: String,
         enum: ['Client/Server', 'Mobile', 'Others'],
@@ -62,6 +67,10 @@ const gradeSchema = new Schema({
         enum: [0, 1, 2, 3, 4],
         default: 0,
         required: true,
+    },
+    depthComments: {
+        type: String,
+        required: false,
     },
     whiteboardQuestion: {
         type: String,
