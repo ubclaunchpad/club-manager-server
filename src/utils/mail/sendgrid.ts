@@ -10,7 +10,12 @@ import ScreeningRejectionMail from '../../resources/mail/screening-rejection-mai
  *  @param { Mail } mail - the email message to be sent
  */
 export const sendEmail = async (recipient: string, action: string): Promise<any> => {
-    sgMail.setApiKey(process.env.APIKEY_SENDGRID);
+    const apiKey = process.env.APIKEY_SENDGRID;
+    if (!apiKey) {
+        // only perform state transition flow without sending the email
+        return Promise.resolve('Invalid SendGrid API key');
+    }
+    sgMail.setApiKey(apiKey);
     return new Promise((resolve, reject) => {
         let mailMessage: Mail;
         switch (action) {
