@@ -14,6 +14,9 @@ emailGridRouter.post('/', async (req: Request, res: Response) => {
         if (resp[0].statusCode === 202) {
             res.send('Mail sent successfully!');
         }
+        if (resp === 'Invalid SendGrid API key') {
+            res.send('Mail not sent due to: ' + resp);
+        }
     } catch (e) {
         res.status(404).send(e.message);
     }
