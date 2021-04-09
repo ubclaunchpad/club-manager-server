@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import { Request, Response } from 'express';
 import Applicant, { IApplicant } from '../models/applicant';
 import ScreeningGrade from '../models/screening-grade';
+import InterviewGrade from '../models/interview-grade';
 import Cookie from 'cookie';
 
 export const createApplicant = async (req: Request, res: Response): Promise<void> => {
@@ -105,12 +106,14 @@ export const listAllApplicants = async (req: Request, res: Response): Promise<vo
 
         for (const applicant of applicants) {
             const screeningGrade = await ScreeningGrade.findById(applicant.screeningGrade);
+            const interviewGrade = await InterviewGrade.findById(applicant.interviewGrade);
             const applicantResponseListObject = {};
 
             for (const property in applicant['_doc'])
                 applicantResponseListObject[property] = applicant['_doc'][property];
 
             applicantResponseListObject['screeningGradeActual'] = screeningGrade;
+            applicantResponseListObject['interviewGradeActual'] = interviewGrade;
 
             applicantResponseList.push(applicantResponseListObject);
         }
